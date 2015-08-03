@@ -1,7 +1,7 @@
 var express = require('express'),
   app = express();
 
-var db = require('./models/index.js')
+var db = require('./models')
 
 app.set('view engine', 'ejs');
 
@@ -13,6 +13,7 @@ app.get("/", function (req, res) {
   	console.log(Users[0].dataValues)
   	res.render('index', {Users:Users});
   });
+
 });
 
 // start the server
