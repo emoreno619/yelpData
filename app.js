@@ -1,12 +1,18 @@
 var express = require('express'),
   app = express();
 
+var db = require('./models/index.js')
+
 app.set('view engine', 'ejs');
 
 // a "GET" request to "/" will run the function below
 app.get("/", function (req, res) {
   // send back the response: 'Hello World'
-  res.render('index', {name:'Eduardo'});
+  
+  db.findAll({}).then(function(Users){
+  	console.log(Users[0].dataValues)
+  	res.render('index', {Users:Users});
+  });
 });
 
 // start the server
