@@ -5,8 +5,10 @@
   </head>
   <body>
   	
-  	<%= Locations[0].url_yelp %>
+  	<% storedLocations.forEach(function(aLocation){ %>
+  		<%= aLocation.url_yelp %>
+  		<br>
+  	<% }) %>
     Hello!
-    <%= rev[0].date %>
   </body>
 </html>

@@ -8,8 +8,10 @@ var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
     until = require('selenium-webdriver').until;
 
+var flag = true;
 var baseUrl = 'http://www.yelp.com/'
-var addUrl1 = 'search?find_desc=food&find_loc=San+Francisco%2C+CA&ns=1'
+var addUrl1 = 'search?find_desc=food&find_loc=Phoenix%2C+AZ&ns=1'
+var nextSearchUrls = ''
 var searchResultsCounter = 0;
 var locations = []
 
@@ -31,11 +33,12 @@ app.get("/", function (req, res) {
   }
   
   // drive();
-  getLocationUrls(function(){
-    db.Location.findAll({}).then(function(storedLocations){
-      res.render('index', {storedLocations:storedLocations})
-    })
+  
+  db.Location.findAll({}).then(function(storedLocations){
+    console.log(storedLocations)
+    res.render('index', {storedLocations:storedLocations})
   })
+
 
   // db.Location.findAll({}).then(function(Locations){
   // 	console.log(Locations[0].getReviews())
@@ -48,6 +51,11 @@ app.get("/", function (req, res) {
   // });
 
 });
+
+app.get('/scrape', function (req, res){
+  getLocationUrls(writeLocDb);
+  res.redirect('/')
+})
 
 // start the server
 app.listen(3000, function () {
@@ -79,7 +87,7 @@ function drive(){
   driver.quit();
 }
 
-function getLocationUrls(){
+function getLocationUrls(callback){
     
       
       var locationUrls = []
@@ -87,8 +95,8 @@ function getLocationUrls(){
       if (searchResultsCounter == 0)
         var url = baseUrl + addUrl1
       else{
-        var addUrl2 = '&start=' + (searchResultsCounter * 10)// + multiple of 10 < 14480
-        var url = baseUrl + addUrl1 + addUrl2
+        // var addUrl2 = '&start=' + (searchResultsCounter * 10)// + multiple of 10 < 14480
+        var url = baseUrl + nextSearchUrls
       }
         
 
@@ -122,15 +130,28 @@ function getLocationUrls(){
           // search result urls. Otherwise, calls callback to explore each
           // saved url's individual location page
 
-          if(searchResultsCounter < 1){
-           searchResultsCounter++;
-           // nextSearchUrls = $('span.current').parent().next('li').children('a').attr('href')
-           setTimeout(getLocationUrls, 1000)
+
+          if (searchResultsCounter < 500){
+            searchResultsCounter += 1;
+            nextSearchUrls = $('span.current').parent().next('li').children('a').attr('href')
+            getLocationUrls();
           } else {
-           console.log(locations)
-           writeLocDb();
-           // call(callback, true);
+            writeLocDb();
           }
+
+          // if(searchResultsCounter < 1400){
+          //  searchResultsCounter++;
+          //  // nextSearchUrls = $('span.current').parent().next('li').children('a').attr('href')
+          //  // getLocationUrls()
+          // }else if(searchResultsCounter == 1400){
+          //   searchResultsCounter++;
+          //   getLocationUrls(writeLocDb)
+          // } else {
+          //  // console.log(locations)
+          //  if(callback)
+          //   callback()
+          //  // call(callback, true);
+          // }
           // call(callback);
           
 
@@ -143,8 +164,9 @@ function getLocationUrls(){
 }
 
 function writeLocDb(){
+  flag = false;
   locations.forEach(function(aLocation, index){
-    if (index != 0){
+    
       if (index != locations.length -1){
         db.Location.create({
           url_yelp : aLocation.url_yelp,
@@ -163,6 +185,6 @@ function writeLocDb(){
           })
         })
       }
-   }
+  
   })
 }
