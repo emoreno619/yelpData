@@ -4,10 +4,12 @@ var express = require('express'),
 var db = require('./models')
 var request = require('request');
 var cheerio = require('cheerio');
-
+var webdriver = require('selenium-webdriver'),
+    By = require('selenium-webdriver').By,
+    until = require('selenium-webdriver').until;
 
 var baseUrl = 'http://www.yelp.com/'
-var addUrl1 = 'search?find_desc=&find_loc=San+Francisco%2C+CA&ns=1#find_desc=food'
+var addUrl1 = 'search?find_desc=food&find_loc=San+Francisco%2C+CA&ns=1'
 var searchResultsCounter = 0;
 var locations = []
 
@@ -28,6 +30,7 @@ app.get("/", function (req, res) {
     console.log('app.js!!!!!!!!!!!!!! ' + locations)
   }
   
+  // drive();
   getLocationUrls()
 
   // db.Location.findAll({}).then(function(Locations){
@@ -47,9 +50,34 @@ app.listen(3000, function () {
   console.log("Starting a server on localhost:3000");
 });
 
+function drive(){
+  var driver = new webdriver.Builder()
+    .forBrowser('firefox')
+    .build();
+
+  if (searchResultsCounter == 0)
+    var url = baseUrl + addUrl1
+  else{
+    var addUrl2 = '&start=' + (searchResultsCounter * 10)// + multiple of 10 < 14480
+    var url = baseUrl + addUrl1 + addUrl2
+  }
+
+  driver.get(url);
+
+  var page = driver.wait(function() {
+    return driver;
+  }, 500);
+
+  console.log(page)
+
+  // getLocationUrls();
+
+  driver.quit();
+}
+
 function getLocationUrls(){
     
-      aLocation = {}
+      
       var locationUrls = []
 
       if (searchResultsCounter == 0)
@@ -70,7 +98,7 @@ function getLocationUrls(){
 
           $('a.biz-name').each(function(i, element){
             var a = $(this)
-            
+            aLocation = {}
             aLocation['url_yelp'] = a.attr('href')
             aLocation['name'] = a.html()
             locations.push(aLocation)
