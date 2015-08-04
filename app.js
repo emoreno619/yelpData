@@ -31,7 +31,11 @@ app.get("/", function (req, res) {
   }
   
   // drive();
-  getLocationUrls()
+  getLocationUrls(function(){
+    db.Location.findAll({}).then(function(storedLocations){
+      res.render('index', {storedLocations:storedLocations})
+    })
+  })
 
   // db.Location.findAll({}).then(function(Locations){
   // 	console.log(Locations[0].getReviews())
@@ -106,12 +110,12 @@ function getLocationUrls(){
           
           // Saves review count for each location
 
-          $('span.review-count').each(function(i, element){
-            var a = $(this)
+          // $('span.review-count').each(function(i, element){
+          //   var a = $(this)
             
-            locations[i]['review_count'] = parseInt(a.html())
+          //   locations[i]['review_count'] = parseInt(a.html())
             
-          })
+          // })
           
 
           // If reaches last url on this page, proceeds to next list of
@@ -140,23 +144,25 @@ function getLocationUrls(){
 
 function writeLocDb(){
   locations.forEach(function(aLocation, index){
-    
-    if (index != locations.length -1){
-      db.Location.create({
-        url_yelp : aLocation.url_yelp,
-        name : aLocation.name,
-        review_count : aLocation.review_count
-      })
-    } else {
-      db.Location.create({
-        url_yelp : aLocation.url_yelp,
-        name : aLocation.name,
-        review_count : aLocation.review_count
-      }).then(function (){
-        db.Location.findAll({}).then(function(storedLocations){
-          res.render('index', {storedLocations:storedLocations})
+    if (index != 0){
+      if (index != locations.length -1){
+        db.Location.create({
+          url_yelp : aLocation.url_yelp,
+          name : aLocation.name,
+          review_count : aLocation.review_count
         })
-      })
-    }
+      } else {
+        db.Location.create({
+          url_yelp : aLocation.url_yelp,
+          name : aLocation.name,
+          review_count : aLocation.review_count
+        }).then(function (){
+          db.Location.findAll({}).then(function(storedLocations){
+            return storedLocations
+            // res.render('index', {storedLocations:storedLocations})
+          })
+        })
+      }
+   }
   })
 }

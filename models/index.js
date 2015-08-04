@@ -14,8 +14,8 @@ var sequelize = new Sequelize('playdb', 'eduardo', '', {
 
 var Location = sequelize.define('location', {
   url_yelp: {
-    type: Sequelize.STRING,
-    unique: true
+    type: Sequelize.TEXT
+    // unique: true
   },
   name: {
     type: Sequelize.STRING
