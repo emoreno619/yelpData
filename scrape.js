@@ -222,6 +222,13 @@ var scrape = {
 			aReview.rating = parseFloat(a.attr('title'))
 		})
 
+		$('.review-content .rating-qualifier meta').each(function (i, element){
+			var aReview = reviews[i]
+			var a = $(this)
+
+			aReview.date = a.attr('content')
+		})
+
 		console.log(reviews)
 	},
 
