@@ -189,12 +189,22 @@ var scrape = {
 
 		})
 
+		$('.user-passport-stats').each(function (i, element){
+			var aReview = reviews[i]
+			var a = $(this)
+
+			// console.log('\n\n\n\n\n' + i + '\n\n\n\n\n')
+			// console.log(a.html())
+
+			if(a.children().hasClass('is-elite'))
+				aReview.is_elite = true
+			else
+				aReview.is_elite = false
+		})
+
 		$('.i-wrap b').each(function (i, element){
 			
 			var aReview = reviews[Math.floor(i/2)]
-
-			// console.log('i:' + i + ' i/2:' + i/2 + ' ' + aReview)
-			// aReview.user_friend_count = ''
 
 			var a = $(this)
 			if(i%2 == 0)
@@ -202,9 +212,9 @@ var scrape = {
 			else
 				aReview.user_review_count = parseInt(a.html())
 			
-
-			// reviews[i].user_friend_count = aReview.user_friend_count
 		})
+
+
 
 		console.log(reviews)
 	},
