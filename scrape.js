@@ -52,7 +52,7 @@ var scrape = {
 	 		    	
 	 		    })
 	 		    
-	 		    console.log(locations)
+	 		   
 
 	 		    for (var i = 0; i < locations.length; i++){
 	 		    	// for (var prop in locations[i])
@@ -86,19 +86,17 @@ var scrape = {
 
 	},
 
-	getLocInfoAndReviews: function(){
+	getLocInfo: function(){
 		
 		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page3.html'));
 
 		//Location data
 		var loc = {}
 
-		//Review data
-		var reviews = []
+		//Location scrape
 
 		$('.biz-page-title').each(function (i, element){
 			var a = $(this)
-			console.log(a.html())
 			var name = a.html().replace(/[\t\n]/g,"")
 			name = name.substring(name.indexOf(name.match(/[a-zA-Z]/)))
 			
@@ -117,7 +115,6 @@ var scrape = {
 		$('.biz-main-info, .biz-rating, .rating-very-large, .star-img').each(function (i, element){
 						if(i == 3){
 							var a = $(this).attr('title')
-							console.log(a)
 							loc.rating = parseFloat(a);
 						}
 		})
@@ -168,7 +165,21 @@ var scrape = {
 			loc.url = a.html()
 		})
 
-		console.log(loc)
+		// console.log(loc)
+
+		scrape.writeDB(loc)
+
+		scrape.getLocReviews($)
+	},
+
+	getLocReviews: function($){
+		//Review data
+		var reviews = []
+		var aReview = {}
+	},
+
+	writeDB: function(obj){
+		console.log(obj)
 	}
 
 }
@@ -177,5 +188,5 @@ var scrape = {
 
 module.exports = scrape;
 
-scrape.getLocInfoAndReviews()
+scrape.getLocInfo()
 // scrape.getLocationUrls()
