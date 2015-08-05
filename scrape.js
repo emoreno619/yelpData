@@ -182,9 +182,28 @@ var scrape = {
 		$('.user-name .user-display-name').each(function (i, element){
 			var aReview = {}
 			aReview.user_id = ''
+			
 			var a = $(this).attr('href')
 			aReview.user_id = a
 			reviews[i] = aReview
+
+		})
+
+		$('.i-wrap b').each(function (i, element){
+			
+			var aReview = reviews[Math.floor(i/2)]
+
+			// console.log('i:' + i + ' i/2:' + i/2 + ' ' + aReview)
+			// aReview.user_friend_count = ''
+
+			var a = $(this)
+			if(i%2 == 0)
+				aReview.user_friend_count = parseInt(a.html())
+			else
+				aReview.user_review_count = parseInt(a.html())
+			
+
+			// reviews[i].user_friend_count = aReview.user_friend_count
 		})
 
 		console.log(reviews)
