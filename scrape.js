@@ -88,7 +88,7 @@ var scrape = {
 
 	getLocInfoAndReviews: function(){
 		
-		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page.html'));
+		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page3.html'));
 
 		//Location data
 		var loc = {}
@@ -139,7 +139,10 @@ var scrape = {
 
 		$('.category-str-list').children('a').each(function (i, element){
 			var a = $(this)
-			loc.category = a.html()
+			if(loc.category)
+				loc.category += ", " + a.html()
+			else
+				loc.category = a.html()
 		})
 
 		$('.street-address').children('address').children('span').each(function (i, element){
