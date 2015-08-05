@@ -101,7 +101,7 @@ var scrape = {
 			console.log(a.html())
 			var name = a.html().replace(/[\t\n]/g,"")
 			name = name.substring(name.indexOf(name.match(/[a-zA-Z]/)))
-			// name = name.substring(0,name.lastIndexOf(/[a-zA-Z]/)+1)			
+			
 			var stopIndex;
 			for (var i = 0; i < name.length - 1; i++){
 				if (name[i] == ' ' && name[i+1] == ' '){
@@ -153,6 +153,11 @@ var scrape = {
 			var a = $(this)
 			var phone = a.html().replace(/[. \n,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
 			loc.phone = phone
+		})
+
+		$('.biz-website').children('a').each(function (i, element){
+			var a = $(this)
+			loc.url = a.html()
 		})
 
 		console.log(loc)
