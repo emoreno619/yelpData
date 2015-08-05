@@ -137,6 +137,11 @@ var scrape = {
 			
 		})
 
+		$('.category-str-list').children('a').each(function (i, element){
+			var a = $(this)
+			loc.category = a.html()
+		})
+
 		$('.street-address').children('address').children('span').each(function (i, element){
 			var a = $(this)
 			
