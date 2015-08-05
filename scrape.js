@@ -234,7 +234,10 @@ var scrape = {
 			var a = $(this)
 
 			var review = a.html()
+			var count = review.split(' ').length
 
+			
+			aReview.review_length = count
 			aReview.review = review
 		})
 
