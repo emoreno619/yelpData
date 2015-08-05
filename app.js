@@ -10,7 +10,7 @@ var webdriver = require('selenium-webdriver'),
 
 var flag = true;
 var baseUrl = 'http://www.yelp.com/'
-var addUrl1 = 'search?find_desc=food&find_loc=Phoenix%2C+AZ&ns=1'
+var addUrl1 = 'search?find_desc=food&find_loc=San+Jose%2C+CA&ns=1'
 var nextSearchUrls = ''
 var searchResultsCounter = 0;
 var locations = []
