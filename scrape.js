@@ -88,7 +88,7 @@ var scrape = {
 
 	getLocInfo: function(){
 		
-		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page3.html'));
+		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page.html'));
 
 		//Location data
 		var loc = {}
@@ -175,11 +175,23 @@ var scrape = {
 	getLocReviews: function($){
 		//Review data
 		var reviews = []
-		var aReview = {}
+		for (var i = 0; i < 40; i++)
+			reviews.push({})
+		
+
+		$('.user-name .user-display-name').each(function (i, element){
+			var aReview = {}
+			aReview.user_id = ''
+			var a = $(this).attr('href')
+			aReview.user_id = a
+			reviews[i] = aReview
+		})
+
+		console.log(reviews)
 	},
 
 	writeDB: function(obj){
-		console.log(obj)
+		// console.log(obj)
 	}
 
 }
