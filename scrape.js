@@ -99,7 +99,19 @@ var scrape = {
 		$('.biz-page-title').each(function (i, element){
 			var a = $(this)
 			console.log(a.html())
-			loc.name = a.html()
+			var name = a.html().replace(/[\t\n]/g,"")
+			name = name.substring(name.indexOf(name.match(/[a-zA-Z]/)))
+			// name = name.substring(0,name.lastIndexOf(/[a-zA-Z]/)+1)			
+			var stopIndex;
+			for (var i = 0; i < name.length - 1; i++){
+				if (name[i] == ' ' && name[i+1] == ' '){
+					stopIndex = i;
+					i = name.length - 1
+				}
+			}
+			if(stopIndex)
+				name = name.substring(0, stopIndex)
+			loc.name = name
 		})
 
 		$('.biz-main-info, .biz-rating, .rating-very-large, .star-img').each(function (i, element){
@@ -135,7 +147,12 @@ var scrape = {
 			} else {
 				loc.address = a.html()
 			}
-			// console.log(a.html())
+		})
+
+		$('.biz-phone').each(function (i, element){
+			var a = $(this)
+			var phone = a.html().replace(/[. \n,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+			loc.phone = phone
 		})
 
 		console.log(loc)
