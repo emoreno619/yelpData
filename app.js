@@ -1,3 +1,5 @@
+//TODO: migration to include review_sentiment and is_elite
+
 var express = require('express'),
   app = express();
 
@@ -53,7 +55,7 @@ app.get("/", function (req, res) {
 });
 
 app.get('/scrape', function (req, res){
-  getLocationUrls(writeLocDb);
+  // getLocationUrls(writeLocDb);
   res.redirect('/')
 })
 

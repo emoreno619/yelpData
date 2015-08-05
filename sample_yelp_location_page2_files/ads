@@ -1,0 +1,34 @@
+{
+
+var google_ads = new Array();
+var google_ad;
+var google_radlinks = new Array();
+var google_radlink;
+var google_info = new Object();
+google_ad = {}; 
+google_ad.n = 1; 
+google_ad.type = "text"; 
+google_ad.bidtype = "CPC"; 
+google_ad.targeting_type = "contextual"; 
+google_ad.url = "http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C8-I8fbnBVcn_J6K_lAKTwIrYA--AuLsHn4Hgse8Bi9OgswoQASCGrsUTYMm-84bIo6AZoAGJ2obXA8gBAagDAaoEgAFP0GUVOhxAeb0fHS_1CSgQyy68sXwZO46eIOhXI5TBnsRK85J5x32pbsC-WnGgR1Pm-LwdMau84qSReIiocbvFTRuG87NmADZgkvB_vGSNYdA9RBl5KdR-lVte50aLoS-Jux12Fu-8M0gXno6u8T9hlWR4In6M6FncqqRPVHclMIgGAYAH36X5KKgHpr4b2AcB&amp;num=1&amp;cid=5GgIbWMEUGU9IiKhHmo1HOA3&amp;sig=AOD64_054IUzoVis6siEraqyTqbx-L6Sfg&amp;client=ca-pub-1554273207255362&amp;adurl=http://greenlitemedicine.com/"; 
+google_ad.visible_url = "greenlitemedicine.com"; 
+google_ad.log_info = "BFLMjfbnBVcn_J6K_lAKTwIrYAwCfgeCx7wEAABABOAHIAQHCEwkQgAEYidqG1wM";
+google_ad.activeview_cid = "5GgIbWMEUGU9IiKhHmo1HOA3OV0";
+google_ad.activeview_js_immediate_enabled = "true";
+google_ad.activeview_js_tos_enabled = "true";
+google_ad.activeview_metadata = "ud=1&la=0&";
+google_ad.line1 = "GreenLite - Official Site"; 
+google_ad.line2 = "Powerful Weight Loss Solution."; 
+google_ad.line3 = "Find Lasting Weight Loss Fast!"; 
+google_ad.regionname = ""; 
+google_ads[0] = google_ad; 
+google_info.feedback_url = "https://www.google.com/url?ct\x3dabg\x26q\x3dhttps://www.google.com/adsense/support/bin/request.py%3Fcontact%3Dabg_afc%26url%3Dhttp://www.yelp.com/biz/back-a-yard-san-jose%26gl%3DUS%26hl%3Den%26client%3Dca-pub-1554273207255362%26ai0%3DC8-I8fbnBVcn_J6K_lAKTwIrYA--AuLsHn4Hgse8Bi9OgswoQASCGrsUTYMm-84bIo6AZoAGJ2obXA8gBAagDAaoEgAFP0GUVOhxAeb0fHS_1CSgQyy68sXwZO46eIOhXI5TBnsRK85J5x32pbsC-WnGgR1Pm-LwdMau84qSReIiocbvFTRuG87NmADZgkvB_vGSNYdA9RBl5KdR-lVte50aLoS-Jux12Fu-8M0gXno6u8T9hlWR4In6M6FncqqRPVHclMIgGAYAH36X5KKgHpr4b2AcB\x26usg\x3dAFQjCNErybrqp8W62K8NZHpG0N79LEsXOQ";
+var google_attribution_text = "AdChoices";
+var google_is_rtl = false;
+if (window.google_ad_request_done) {
+google_ad_request_done(google_ads);
+}
+if (window.google_radlink_request_done) {
+google_radlink_request_done(google_radlinks);
+}
+}

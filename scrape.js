@@ -1,11 +1,16 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
+//for getLocationUrls
 
 var baseUrl = 'http://www.yelp.com/search?find_desc=&find_loc=San+Francisco%2C+CA&ns=1#find_desc=food&start=10'
 var addUrl = '&start=' // + multiple of 10 < 14480
 var searchResultsCounter = 0;
 var locations = []
+
+//for getLocInfoAndReviews
+
+var baseUrl2 = 'http://www.yelp.com'
 
 var scrape = { 
 
@@ -48,7 +53,7 @@ var scrape = {
 	 		    })
 	 		    
 	 		    console.log(locations)
-	 		    
+
 	 		    for (var i = 0; i < locations.length; i++){
 	 		    	// for (var prop in locations[i])
 	 		    		// console.log(locations[i][prop])
@@ -79,6 +84,10 @@ var scrape = {
 	 	// })
 		
 
+	},
+
+	getLocInfoAndReviews: function(){
+
 	}
 
 }
@@ -87,4 +96,4 @@ var scrape = {
 
 module.exports = scrape;
 
-scrape.getLocationUrls()
+// scrape.getLocationUrls()
