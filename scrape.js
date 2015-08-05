@@ -214,7 +214,13 @@ var scrape = {
 			
 		})
 
+		$('.review-content .star-img').each(function (i, element){
 
+			var aReview = reviews[i]
+			var a = $(this)
+
+			aReview.rating = parseFloat(a.attr('title'))
+		})
 
 		console.log(reviews)
 	},
