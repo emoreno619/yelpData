@@ -1,6 +1,6 @@
 var request = require('request');
 var cheerio = require('cheerio');
-
+var fs = require('fs');
 //for getLocationUrls
 
 var baseUrl = 'http://www.yelp.com/search?find_desc=&find_loc=San+Francisco%2C+CA&ns=1#find_desc=food&start=10'
@@ -87,7 +87,18 @@ var scrape = {
 	},
 
 	getLocInfoAndReviews: function(){
+		
+		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page.html'));
+			
 
+		console.log($.html())
+
+		$('h1').each(function (i, element){
+			var a = $(this)
+			console.log(a.html())
+
+		})
+		
 	}
 
 }
@@ -96,4 +107,5 @@ var scrape = {
 
 module.exports = scrape;
 
+scrape.getLocInfoAndReviews()
 // scrape.getLocationUrls()
