@@ -125,6 +125,19 @@ var scrape = {
 			
 		})
 
+		$('.street-address').children('address').children('span').each(function (i, element){
+			var a = $(this)
+			
+			if (loc.address){
+				loc.address += " " + a.html()
+				if (i == 1)
+					loc.address += ","
+			} else {
+				loc.address = a.html()
+			}
+			// console.log(a.html())
+		})
+
 		console.log(loc)
 	}
 
