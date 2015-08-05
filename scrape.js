@@ -89,16 +89,43 @@ var scrape = {
 	getLocInfoAndReviews: function(){
 		
 		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page.html'));
-			
 
-		console.log($.html())
+		//Location data
+		var loc = {}
 
-		$('h1').each(function (i, element){
+		//Review data
+		var reviews = []
+
+		$('.biz-page-title').each(function (i, element){
 			var a = $(this)
 			console.log(a.html())
+			loc.name = a.html()
+		})
 
+		$('.biz-main-info, .biz-rating, .rating-very-large, .star-img').each(function (i, element){
+						if(i == 3){
+							var a = $(this).attr('title')
+							console.log(a)
+							loc.rating = parseFloat(a);
+						}
+		})
+
+		$('.biz-main-info, .biz-rating, .review-count').each(function (i, element){
+			var a = $(this).children('span').children('span')
+			
+			if (a.html())
+				loc.review_count = parseInt(a.html())
 		})
 		
+		$('.price-range').each(function (i, element){
+			var a = $(this)
+			if (i == 0){
+				loc.price = a.html()
+			}
+			
+		})
+
+		console.log(loc)
 	}
 
 }
