@@ -97,13 +97,13 @@ Location.hasMany(Review)
 
 // Location.hasMany(Review)
 
-// Location.sync({force: true}).then(function () {
+// Location.sync().then(function () {
 
 // 	Location.create({
 // 	  url_yelp: 'test location'
 // 	});
  
-//   	Review.sync({force: true}).then(function () {
+//   	Review.sync().then(function () {
  
 //    		return Review.create({
 //    			date: 'test review',
