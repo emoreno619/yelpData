@@ -229,6 +229,15 @@ var scrape = {
 			aReview.date = a.attr('content')
 		})
 
+		$('.review-content p').each(function (i, element){
+			var aReview = reviews[i]
+			var a = $(this)
+
+			var review = a.html()
+
+			aReview.review = review
+		})
+
 		console.log(reviews)
 	},
 
