@@ -295,14 +295,18 @@ var scrape = {
 		}else if(reviews[0].review){
 			db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
-				reviews.forEach(function(aReview){
 
-					db.Review.create({
-						locationId: aLocation.id,
+				//does this work?! if so, sweeeeeeet
+				db.Review.bulkCreate(reviews).then(function(){})
 
-					}).then(function(){})
-					
-				})
+				// reviews.forEach(function(aReview){
+
+				// 	db.Review.create({
+				// 		locationId: aLocation.id,
+
+				// 	}).then(function(){})
+
+				// })
 
 			})
 		}
