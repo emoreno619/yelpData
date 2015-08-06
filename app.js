@@ -36,9 +36,13 @@ app.get("/", function (req, res) {
   
   // drive();
   
-  db.Location.findAll({}).then(function(storedLocations){
-    console.log(storedLocations)
-    res.render('index', {storedLocations:storedLocations})
+  // db.Location.findAll({}).then(function(storedLocations){
+  //   console.log(storedLocations)
+  //   res.render('index', {storedLocations:storedLocations})
+  // })
+
+  db.Location.findOne({ where: {url_yelp: '/biz/ikes-place-san-francisco'} }).then(function(aLocation){
+    res.render('index', { aLocation:aLocation })
   })
 
 

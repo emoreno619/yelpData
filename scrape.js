@@ -94,7 +94,7 @@ var scrape = {
 
 		//Location data
 		var loc = {}
-
+		loc.url_yelp = aUrl
 		//Location scrape
 
 		$('.biz-page-title').each(function (i, element){
@@ -169,9 +169,9 @@ var scrape = {
 
 		console.log(loc)
 
-		scrape.writeDB(loc)
+		// scrape.writeDB(loc)
 
-		scrape.getLocReviews($)
+		// scrape.getLocReviews($, aUrl)
 	},
 
 	readLocsFromDb: function(){
@@ -196,7 +196,7 @@ var scrape = {
 		})
 	},
 
-	getLocReviews: function($, nextReviewPage){
+	getLocReviews: function($, url_yelp, nextReviewPage){
 		//Review data
 		var reviews = []
 		for (var i = 0; i < 40; i++)
@@ -268,18 +268,44 @@ var scrape = {
 			aReview.review = review
 		})
 
-		scrape.writeDB(reviews)
+		scrape.writeDB(reviews, url_yelp)
 
 		var nextReviewPage = $('span.current').parent().next('li').children('a').attr('href')
 		
-		// scrape.getLocReviews(nextReviewPage)
+		// scrape.getLocReviews(null,url_yelp,nextReviewPage)
 		
 		console.log(reviews)
 	},
 
-	writeDB: function(obj){
+	writeDB: function(obj, url_yelp){
 		// console.log(obj)
+		if (obj.name){
+			db.Location.findOne({ where: {url_yelp: obj.url_yelp} }).then(function(aLocation){
+				aLocation.updateAttributes({ 
+					name: obj.name,
+					rating: obj.rating,
+					review_count: obj.review_count,
+					price: obj.price,
+					category: obj.category,
+					address: obj.address,
+					phone: obj.phone,
+					url: obj.url
+				}).then(function(){})
+			})
+		}else if(reviews[0].review){
+			db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
+				reviews.forEach(function(aReview){
+
+					db.Review.create({
+						locationId: aLocation.id,
+
+					}).then(function(){})
+					
+				})
+
+			})
+		}
 	}
 
 }
