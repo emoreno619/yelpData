@@ -92,6 +92,15 @@ var Review = sequelize.define('review', {
   freezeTableName: true // Model tableName will be the same as the model name
 });
 
+var Scrapeprogress = sequelize.define('scrapeprogress', {
+  locId: {
+    type: Sequelize.INTEGER
+  }
+}, {
+  freezeTableName: true
+});
+
+
 // Review.belongsTo(Location)
 Location.hasMany(Review)
 
@@ -119,5 +128,6 @@ Location.hasMany(Review)
 
 module.exports = sequelize;
 
+module.exports.Scrapeprogress = Scrapeprogress;
 module.exports.Location = Location;
 module.exports.Review = Review;

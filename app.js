@@ -59,7 +59,9 @@ app.get("/", function (req, res) {
 });
 
 app.get('/scrape', function (req, res){
-  // getLocationUrls(writeLocDb);
+  db.Scrapeprogress.findAll({}).then(function(aScrape){
+    console.log("BOOOOOOOOOOOOOOOOOOOOOOOP" + aScrape)
+  })
   res.redirect('/')
 })
 
