@@ -318,5 +318,5 @@ var scrape = {
 
 module.exports = scrape;
 
-scrape.getLocInfo()
+// scrape.getLocInfo()
 // scrape.getLocationUrls()
