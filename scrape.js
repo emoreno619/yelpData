@@ -295,6 +295,9 @@ var scrape = {
 		}else if(obj[0].review){
 			db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
+				for (var i = 0; i < obj.length; i++){
+					obj[i].locationId = aLocation.id
+				}
 
 				//does this work?! if so, sweeeeeeet
 				db.Review.bulkCreate(obj).then(function(){})
