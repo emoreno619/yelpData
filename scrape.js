@@ -1,6 +1,7 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var fs = require('fs');
+var db = require('./models');
 //for getLocationUrls
 
 var baseUrl = 'http://www.yelp.com/search?find_desc=&find_loc=San+Francisco%2C+CA&ns=1#find_desc=food&start=10'
@@ -87,7 +88,8 @@ var scrape = {
 	},
 
 	getLocInfo: function(aUrl){
-		
+		console.log("Getting Loc Info:" + aUrl)
+
 		var locationSite = 'http://www.yelp.com' + aUrl
 
 		var $ = cheerio.load(locationSite);
@@ -167,15 +169,16 @@ var scrape = {
 			loc.url = a.html()
 		})
 
-		console.log(loc)
-
 		scrape.writeDbLoc(loc)
 
-		// scrape.getLocReviews($, aUrl)
+		scrape.getLocReviews($, aUrl)
 	},
 
 	readLocsFromDb: function(){
 		db.Location.findAll({}).then(function(storedLocations){
+			
+			console.log(storedLocations)
+
 			var i = 0;
 			var interval = setInterval(function(){
 				
@@ -186,7 +189,7 @@ var scrape = {
 
 								if (i >= storedLocations.length)
 									clearInterval(interval)
-							}, 15000)
+							}, 10000)
 
 
 			// storedLocations.forEach(function(aLocation){
@@ -199,11 +202,19 @@ var scrape = {
 	getLocReviews: function($, url_yelp, nextReviewPage){
 		//Review data
 		var reviews = []
+		
 		for (var i = 0; i < 40; i++)
 			reviews.push({})
 		
 		if (nextReviewPage){
 			$ = cheerio.load('http://www.yelp.com' + nextReviewPage);
+			console.log("Getting more reviews for loc: " + nextReviewPage)
+		} else if (!$){
+			//done. go to next location
+			console.log("Done with reviews for loc: " + url_yelp)
+			return
+		} else {
+			console.log("Getting first reviews for loc: " + url_yelp)
 		}
 
 		$('.user-name .user-display-name').each(function (i, element){
@@ -272,13 +283,16 @@ var scrape = {
 
 		var nextReviewPage = $('span.current').parent().next('li').children('a').attr('href')
 		
-		// scrape.getLocReviews(null,url_yelp,nextReviewPage)
+		setTimeout(function(){
+			scrape.getLocReviews(null,url_yelp,nextReviewPage)
+		}, 1000)
 		
-		console.log(reviews)
+		
+		// console.log(reviews)
 	},
 
 	writeDbLoc: function(obj, url_yelp){
-		// console.log(obj)
+		console.log("Writing data about loc:" + obj.name)
 			db.Location.findOne({ where: {url_yelp: obj.url_yelp} }).then(function(aLocation){
 				aLocation.updateAttributes({ 
 					name: obj.name,
@@ -294,6 +308,8 @@ var scrape = {
 	},
 
 	writeDbRev: function(obj, url_yelp){
+		console.log("Saving reviews for: " + url_yelp)
+
 		db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
 			for (var i = 0; i < obj.length; i++){
@@ -325,5 +341,6 @@ var scrape = {
 
 module.exports = scrape;
 
+// scrape.readLocsFromDb();
 // scrape.getLocInfo()
 // scrape.getLocationUrls()
