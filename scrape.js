@@ -169,7 +169,7 @@ var scrape = {
 
 		console.log(loc)
 
-		scrape.writeDB(loc)
+		scrape.writeDbLoc(loc)
 
 		// scrape.getLocReviews($, aUrl)
 	},
@@ -179,14 +179,14 @@ var scrape = {
 			var i = 0;
 			var interval = setInterval(function(){
 				
-				aUrl = storedLocations[i].url_yelp
-				getLocInfo(aUrl)
-				
-				i++;
+								aUrl = storedLocations[i].url_yelp
+								getLocInfo(aUrl)
+								
+								i++;
 
-				if (i >= storedLocations.length)
-					clearInterval(interval)
-			}, 15000)
+								if (i >= storedLocations.length)
+									clearInterval(interval)
+							}, 15000)
 
 
 			// storedLocations.forEach(function(aLocation){
@@ -203,7 +203,7 @@ var scrape = {
 			reviews.push({})
 		
 		if (nextReviewPage){
-			var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page2.html'));
+			$ = cheerio.load('http://www.yelp.com' + nextReviewPage);
 		}
 
 		$('.user-name .user-display-name').each(function (i, element){
@@ -268,7 +268,7 @@ var scrape = {
 			aReview.review = review
 		})
 
-		scrape.writeDB(reviews, url_yelp)
+		scrape.writeDbRev(reviews, url_yelp)
 
 		var nextReviewPage = $('span.current').parent().next('li').children('a').attr('href')
 		
@@ -277,9 +277,8 @@ var scrape = {
 		console.log(reviews)
 	},
 
-	writeDB: function(obj, url_yelp){
+	writeDbLoc: function(obj, url_yelp){
 		// console.log(obj)
-		if (obj.name){
 			db.Location.findOne({ where: {url_yelp: obj.url_yelp} }).then(function(aLocation){
 				aLocation.updateAttributes({ 
 					name: obj.name,
@@ -292,31 +291,32 @@ var scrape = {
 					url: obj.url
 				}).then(function(){})
 			})
-		}else if(obj[0].review){
-			db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
+	},
 
-				for (var i = 0; i < obj.length; i++){
-					obj[i].locationId = aLocation.id
-				}
+	writeDbRev: function(obj, url_yelp){
+		db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
-				db.Scrapeprogress.create({locId: aLocation.id}).then(function(aScrape){
-				  
-					//does this work?! if so, sweeeeeeet
-					db.Review.bulkCreate(obj).then(function(){})
-				  
-				})
+			for (var i = 0; i < obj.length; i++){
+				obj[i].locationId = aLocation.id
+			}
 
-				// reviews.forEach(function(aReview){
-
-				// 	db.Review.create({
-				// 		locationId: aLocation.id,
-
-				// 	}).then(function(){})
-
-				// })
+			db.Scrapeprogress.create({locId: aLocation.id}).then(function(aScrape){
+			  
+				//does this work?! if so, sweeeeeeet
+				db.Review.bulkCreate(obj).then(function(){})
 
 			})
-		}
+
+			// reviews.forEach(function(aReview){
+
+			// 	db.Review.create({
+			// 		locationId: aLocation.id,
+
+			// 	}).then(function(){})
+
+			// })
+
+		})
 	}
 
 }
