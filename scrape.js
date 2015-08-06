@@ -299,8 +299,12 @@ var scrape = {
 					obj[i].locationId = aLocation.id
 				}
 
-				//does this work?! if so, sweeeeeeet
-				db.Review.bulkCreate(obj).then(function(){})
+				db.Scrapeprogress.create({locId: aLocation.id}).then(function(aScrape){
+				  
+					//does this work?! if so, sweeeeeeet
+					db.Review.bulkCreate(obj).then(function(){})
+				  
+				})
 
 				// reviews.forEach(function(aReview){
 

@@ -59,7 +59,7 @@ app.get("/", function (req, res) {
 });
 
 app.get('/scrape', function (req, res){
-  db.Scrapeprogress.findAll({}).then(function(aScrape){
+  db.Scrapeprogress.create({locId:100}).then(function(aScrape){
     console.log("BOOOOOOOOOOOOOOOOOOOOOOOP" + aScrape)
   })
   res.redirect('/')
