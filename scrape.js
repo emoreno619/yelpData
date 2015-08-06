@@ -169,7 +169,7 @@ var scrape = {
 
 		console.log(loc)
 
-		// scrape.writeDB(loc)
+		scrape.writeDB(loc)
 
 		// scrape.getLocReviews($, aUrl)
 	},
@@ -292,12 +292,12 @@ var scrape = {
 					url: obj.url
 				}).then(function(){})
 			})
-		}else if(reviews[0].review){
+		}else if(obj[0].review){
 			db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
 
 				//does this work?! if so, sweeeeeeet
-				db.Review.bulkCreate(reviews).then(function(){})
+				db.Review.bulkCreate(obj).then(function(){})
 
 				// reviews.forEach(function(aReview){
 
