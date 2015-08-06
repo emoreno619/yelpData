@@ -6,7 +6,7 @@ module.exports = {
     return queryInterface.addColumn(
         'review',
         'is_elite',
-        DataTypes.BOOLEAN
+        Sequelize.BOOLEAN
       )
 
 
