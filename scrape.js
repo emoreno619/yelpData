@@ -86,9 +86,11 @@ var scrape = {
 
 	},
 
-	getLocInfo: function(){
+	getLocInfo: function(aUrl){
 		
-		var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page.html'));
+		var locationSite = 'http://www.yelp.com' + aUrl
+
+		var $ = cheerio.load(locationSite);
 
 		//Location data
 		var loc = {}
@@ -165,19 +167,44 @@ var scrape = {
 			loc.url = a.html()
 		})
 
-		// console.log(loc)
+		console.log(loc)
 
 		scrape.writeDB(loc)
 
 		scrape.getLocReviews($)
 	},
 
-	getLocReviews: function($){
+	readLocsFromDb: function(){
+		db.Location.findAll({}).then(function(storedLocations){
+			var i = 0;
+			var interval = setInterval(function(){
+				
+				aUrl = storedLocations[i].url_yelp
+				getLocInfo(aUrl)
+				
+				i++;
+
+				if (i >= storedLocations.length)
+					clearInterval(interval)
+			}, 15000)
+
+
+			// storedLocations.forEach(function(aLocation){
+			// 	var aUrl = aLocation.url_yelp;
+			// 	setTimeout( function(){ getLocInfo(aUrl) }, 2000)
+			// })
+		})
+	},
+
+	getLocReviews: function($, nextReviewPage){
 		//Review data
 		var reviews = []
 		for (var i = 0; i < 40; i++)
 			reviews.push({})
 		
+		if (nextReviewPage){
+			var $ = cheerio.load(fs.readFileSync('./sample_yelp_location_page2.html'));
+		}
 
 		$('.user-name .user-display-name').each(function (i, element){
 			var aReview = {}
@@ -241,11 +268,18 @@ var scrape = {
 			aReview.review = review
 		})
 
+		scrape.writeDB(reviews)
+
+		var nextReviewPage = $('span.current').parent().next('li').children('a').attr('href')
+		
+		// scrape.getLocReviews(nextReviewPage)
+		
 		console.log(reviews)
 	},
 
 	writeDB: function(obj){
 		// console.log(obj)
+
 	}
 
 }
