@@ -92,98 +92,103 @@ var scrape = {
 
 		var locationSite = 'http://www.yelp.com' + aUrl
 
-		var $ = cheerio.load(locationSite);
+		request(locationSite, function (error, response, html) {
 
-		//Location data
-		var loc = {}
-		loc.url_yelp = aUrl
-		//Location scrape
+			var $ = cheerio.load(html);
 
-		$('.biz-page-title').each(function (i, element){
-			var a = $(this)
-			var name = a.html().replace(/[\t\n]/g,"")
-			name = name.substring(name.indexOf(name.match(/[a-zA-Z]/)))
-			
-			var stopIndex;
-			for (var i = 0; i < name.length - 1; i++){
-				if (name[i] == ' ' && name[i+1] == ' '){
-					stopIndex = i;
-					i = name.length - 1
+			//Location data
+			var loc = {}
+			loc.url_yelp = aUrl
+			//Location scrape
+
+			$('.biz-page-title').each(function (i, element){
+				var a = $(this)
+				var name = a.html().replace(/[\t\n]/g,"")
+				name = name.substring(name.indexOf(name.match(/[a-zA-Z]/)))
+				
+				var stopIndex;
+				for (var i = 0; i < name.length - 1; i++){
+					if (name[i] == ' ' && name[i+1] == ' '){
+						stopIndex = i;
+						i = name.length - 1
+					}
 				}
-			}
-			if(stopIndex)
-				name = name.substring(0, stopIndex)
-			loc.name = name
-		})
+				if(stopIndex)
+					name = name.substring(0, stopIndex)
+				loc.name = name
+			})
 
-		$('.biz-main-info, .biz-rating, .rating-very-large, .star-img').each(function (i, element){
-						if(i == 3){
-							var a = $(this).attr('title')
-							loc.rating = parseFloat(a);
-						}
-		})
+			$('.biz-main-info, .biz-rating, .rating-very-large, .star-img').each(function (i, element){
+							if(i == 3){
+								var a = $(this).attr('title')
+								loc.rating = parseFloat(a);
+							}
+			})
 
-		$('.biz-main-info, .biz-rating, .review-count').each(function (i, element){
-			var a = $(this).children('span').children('span')
+			$('.biz-main-info, .biz-rating, .review-count').each(function (i, element){
+				var a = $(this).children('span').children('span')
+				
+				if (a.html())
+					loc.review_count = parseInt(a.html())
+			})
 			
-			if (a.html())
-				loc.review_count = parseInt(a.html())
-		})
-		
-		$('.price-range').each(function (i, element){
-			var a = $(this)
-			if (i == 0){
-				loc.price = a.html()
-			}
-			
-		})
+			$('.price-range').each(function (i, element){
+				var a = $(this)
+				if (i == 0){
+					loc.price = a.html()
+				}
+				
+			})
 
-		$('.category-str-list').children('a').each(function (i, element){
-			var a = $(this)
-			if(loc.category)
-				loc.category += ", " + a.html()
-			else
-				loc.category = a.html()
+			$('.category-str-list').children('a').each(function (i, element){
+				var a = $(this)
+				if(loc.category)
+					loc.category += ", " + a.html()
+				else
+					loc.category = a.html()
+			})
+
+			$('.street-address').children('address').children('span').each(function (i, element){
+				var a = $(this)
+				
+				if (loc.address){
+					loc.address += " " + a.html()
+					if (i == 1)
+						loc.address += ","
+				} else {
+					loc.address = a.html()
+				}
+			})
+
+			$('.biz-phone').each(function (i, element){
+				var a = $(this)
+				var phone = a.html().replace(/[. \n,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+				loc.phone = phone
+			})
+
+			$('.biz-website').children('a').each(function (i, element){
+				var a = $(this)
+				loc.url = a.html()
+			})
+
+			console.log(loc)
+
+			scrape.writeDbLoc(loc)
+
+			scrape.getLocReviews($, aUrl)
 		})
-
-		$('.street-address').children('address').children('span').each(function (i, element){
-			var a = $(this)
-			
-			if (loc.address){
-				loc.address += " " + a.html()
-				if (i == 1)
-					loc.address += ","
-			} else {
-				loc.address = a.html()
-			}
-		})
-
-		$('.biz-phone').each(function (i, element){
-			var a = $(this)
-			var phone = a.html().replace(/[. \n,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
-			loc.phone = phone
-		})
-
-		$('.biz-website').children('a').each(function (i, element){
-			var a = $(this)
-			loc.url = a.html()
-		})
-
-		scrape.writeDbLoc(loc)
-
-		scrape.getLocReviews($, aUrl)
 	},
 
 	readLocsFromDb: function(){
 		db.Location.findAll({}).then(function(storedLocations){
-			
-			console.log(storedLocations)
+			for (var j = 0; j < storedLocations.length; j++)
+				console.log(storedLocations[j].url_yelp)
 
 			var i = 0;
 			var interval = setInterval(function(){
 				
 								aUrl = storedLocations[i].url_yelp
-								getLocInfo(aUrl)
+								scrape.getLocInfo(aUrl)
 								
 								i++;
 
@@ -207,15 +212,25 @@ var scrape = {
 			reviews.push({})
 		
 		if (nextReviewPage){
-			$ = cheerio.load('http://www.yelp.com' + nextReviewPage);
-			console.log("Getting more reviews for loc: " + nextReviewPage)
+
+			request('http://www.yelp.com' + nextReviewPage, function (error, response, html) {
+
+				$ = cheerio.load(html);
+				console.log("Getting more reviews for loc: " + nextReviewPage)
+				reviewScrape($, url_yelp)
+			})
 		} else if (!$){
 			//done. go to next location
 			console.log("Done with reviews for loc: " + url_yelp)
 			return
 		} else {
 			console.log("Getting first reviews for loc: " + url_yelp)
+			reviewScrape($, url_yelp)
 		}
+		// console.log(reviews)
+	},
+
+	reviewScrape: function($, url_yelp, nextReviewPage){
 
 		$('.user-name .user-display-name').each(function (i, element){
 			var aReview = {}
@@ -286,9 +301,6 @@ var scrape = {
 		setTimeout(function(){
 			scrape.getLocReviews(null,url_yelp,nextReviewPage)
 		}, 1000)
-		
-		
-		// console.log(reviews)
 	},
 
 	writeDbLoc: function(obj, url_yelp){
@@ -341,6 +353,6 @@ var scrape = {
 
 module.exports = scrape;
 
-// scrape.readLocsFromDb();
+scrape.readLocsFromDb();
 // scrape.getLocInfo()
 // scrape.getLocationUrls()
