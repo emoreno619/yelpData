@@ -217,7 +217,7 @@ var scrape = {
 
 				$ = cheerio.load(html);
 				console.log("Getting more reviews for loc: " + nextReviewPage)
-				reviewScrape($, url_yelp)
+				scrape.reviewScrape($, reviews, url_yelp)
 			})
 		} else if (!$){
 			//done. go to next location
@@ -225,12 +225,12 @@ var scrape = {
 			return
 		} else {
 			console.log("Getting first reviews for loc: " + url_yelp)
-			reviewScrape($, url_yelp)
+			scrape.reviewScrape($, reviews, url_yelp)
 		}
 		// console.log(reviews)
 	},
 
-	reviewScrape: function($, url_yelp, nextReviewPage){
+	reviewScrape: function($, reviews, url_yelp, nextReviewPage){
 
 		$('.user-name .user-display-name').each(function (i, element){
 			var aReview = {}
