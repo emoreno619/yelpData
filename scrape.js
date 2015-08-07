@@ -213,7 +213,7 @@ var scrape = {
 		
 		if (nextReviewPage){
 
-			request('http://www.yelp.com' + nextReviewPage, function (error, response, html) {
+			request(nextReviewPage, function (error, response, html) {
 
 				$ = cheerio.load(html);
 				console.log("Getting more reviews for loc: " + nextReviewPage)
@@ -294,10 +294,11 @@ var scrape = {
 			aReview.review = review
 		})
 
-		scrape.writeDbRev(reviews, url_yelp)
+		// scrape.writeDbRev(reviews, url_yelp)
 
-		var nextReviewPage = $('span.current').parent().next('li').children('a').attr('href')
+		var nextReviewPage = $('span.current').parent('li').next().children('a').attr('href')
 		
+		console.log(nextReviewPage)
 		setTimeout(function(){
 			scrape.getLocReviews(null,url_yelp,nextReviewPage)
 		}, 1000)
@@ -324,14 +325,18 @@ var scrape = {
 
 		db.Location.findOne({ where: {url_yelp: url_yelp} }).then(function(aLocation){
 
+			var noEmpty = []
+
 			for (var i = 0; i < obj.length; i++){
 				obj[i].locationId = aLocation.id
+				if (obj[i].review)
+					noEmpty.push(obj[i])
 			}
 
 			db.Scrapeprogress.create({locId: aLocation.id}).then(function(aScrape){
 			  
 				//does this work?! if so, sweeeeeeet
-				db.Review.bulkCreate(obj).then(function(){})
+				db.Review.bulkCreate(noEmpty).then(function(){})
 
 			})
 
