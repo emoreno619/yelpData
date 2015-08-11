@@ -128,8 +128,9 @@ var scrape = {
 			$('.biz-main-info, .biz-rating, .review-count').each(function (i, element){
 				var a = $(this).children('span').children('span')
 				
-				if (a.html())
+				if (a.html()){
 					loc.review_count = parseInt(a.html())
+				}
 			})
 			
 			$('.price-range').each(function (i, element){
@@ -175,7 +176,8 @@ var scrape = {
 
 			scrape.writeDbLoc(loc)
 
-			scrape.getLocReviews($, aUrl)
+			var pageCounter = 40
+			scrape.getLocReviews($, aUrl, null, loc.review_count, pageCounter)
 		})
 	},
 
@@ -187,14 +189,16 @@ var scrape = {
 			var i = 0;
 			var interval = setInterval(function(){
 				
+
 								aUrl = storedLocations[i].url_yelp
+				
 								scrape.getLocInfo(aUrl)
 								
 								i++;
 
 								if (i >= storedLocations.length)
 									clearInterval(interval)
-							}, 10000)
+							}, 20000)
 
 
 			// storedLocations.forEach(function(aLocation){
@@ -204,7 +208,7 @@ var scrape = {
 		})
 	},
 
-	getLocReviews: function($, url_yelp, nextReviewPage){
+	getLocReviews: function($, url_yelp, nextReviewPage, reviewCount, pageCounter){
 		//Review data
 		var reviews = []
 		
@@ -217,7 +221,7 @@ var scrape = {
 
 				$ = cheerio.load(html);
 				console.log("Getting more reviews for loc: " + nextReviewPage)
-				scrape.reviewScrape($, reviews, url_yelp)
+				scrape.reviewScrape($, reviews, url_yelp, nextReviewPage, reviewCount, pageCounter)
 			})
 		} else if (!$){
 			//done. go to next location
@@ -225,12 +229,13 @@ var scrape = {
 			return
 		} else {
 			console.log("Getting first reviews for loc: " + url_yelp)
-			scrape.reviewScrape($, reviews, url_yelp)
+			
+			scrape.reviewScrape($, reviews, url_yelp, nextReviewPage, reviewCount, pageCounter)
 		}
 		// console.log(reviews)
 	},
 
-	reviewScrape: function($, reviews, url_yelp, nextReviewPage){
+	reviewScrape: function($, reviews, url_yelp, nextReviewPage, reviewCount, pageCounter){
 
 		$('.user-name .user-display-name').each(function (i, element){
 			var aReview = {}
@@ -260,10 +265,12 @@ var scrape = {
 			var aReview = reviews[Math.floor(i/2)]
 
 			var a = $(this)
-			if(i%2 == 0)
-				aReview.user_friend_count = parseInt(a.html())
-			else
-				aReview.user_review_count = parseInt(a.html())
+			if (aReview){
+				if(i%2 == 0)
+					aReview.user_friend_count = parseInt(a.html())
+				else
+					aReview.user_review_count = parseInt(a.html())
+			}
 			
 		})
 
@@ -296,12 +303,20 @@ var scrape = {
 
 		// scrape.writeDbRev(reviews, url_yelp)
 
-		var nextReviewPage = $('span.current').parent('li').next().children('a').attr('href')
-		
-		console.log(nextReviewPage)
-		setTimeout(function(){
-			scrape.getLocReviews(null,url_yelp,nextReviewPage)
-		}, 1000)
+		// var nextReviewPage = $('span.current').parent('li').next().children('a').attr('href')
+	
+
+		console.log("url_yelp: " + url_yelp + " reviewCount: " + reviewCount + " pageCounter: " + pageCounter)
+			
+			if(parseInt(pageCounter) < parseInt(reviewCount)){
+				var nextReviewPage = 'http://www.yelp.com' + url_yelp + '?start=' + pageCounter
+				pageCounter += 40
+				console.log(nextReviewPage)
+				setTimeout(function(){
+					scrape.getLocReviews(null,url_yelp, nextReviewPage, reviewCount, pageCounter)
+				}, 1000)
+			}
+
 	},
 
 	writeDbLoc: function(obj, url_yelp){
