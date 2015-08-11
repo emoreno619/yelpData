@@ -198,7 +198,7 @@ var scrape = {
 
 								if (i >= storedLocations.length)
 									clearInterval(interval)
-							}, 20000)
+							}, 30000)
 
 
 			// storedLocations.forEach(function(aLocation){
@@ -301,7 +301,7 @@ var scrape = {
 			aReview.review = review
 		})
 
-		// scrape.writeDbRev(reviews, url_yelp)
+		scrape.writeDbRev(reviews, url_yelp)
 
 		// var nextReviewPage = $('span.current').parent('li').next().children('a').attr('href')
 	
@@ -314,7 +314,7 @@ var scrape = {
 				console.log(nextReviewPage)
 				setTimeout(function(){
 					scrape.getLocReviews(null,url_yelp, nextReviewPage, reviewCount, pageCounter)
-				}, 1000)
+				}, 2000)
 			}
 
 	},
