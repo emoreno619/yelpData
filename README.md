@@ -1,4 +1,4 @@
-This program scraped about 800,000 reviews from yelp. It is an expansion of another project, [sentimentAnalysis](https://github.com/emoreno619/sentimentAnalysis) For further explanation, see my blog https://medium.com/@emoreno619
+This program scraped about 800,000 unique reviews from yelp (scraped 1.3 million in one day, some were redundant). It is an expansion of another project, [sentimentAnalysis](https://github.com/emoreno619/sentimentAnalysis) For further explanation, see my blog https://medium.com/@emoreno619
 
 Documentation of procedure that produced data set:
 
