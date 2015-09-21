@@ -10,6 +10,13 @@ var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
     until = require('selenium-webdriver').until;
 
+var yelp = require("yelp").createClient({
+            consumer_key: "KEFLEf4cm0Xw7vzreOAPLw", 
+            consumer_secret: "-KgYfp8CXRq0tSEd7_XCqYmRQr8",
+            token: "F0VfgC9G0VPeXYF8Q4aX8lbOgVKvkfVC",
+            token_secret: "cZe1601_aBo0HYzYzb0hqmEfKBc"
+          });
+
 var flag = true;
 var baseUrl = 'http://www.yelp.com/'
 var addUrl1 = 'search?find_desc=food&find_loc=San+Jose%2C+CA&ns=1'
@@ -30,9 +37,13 @@ app.get("/", function (req, res) {
   //   console.log('app.js!!!!!!!!!!!!!! ' + locations)
   // })
 
-  function printEm(locations){
-    console.log('app.js!!!!!!!!!!!!!! ' + locations)
-  }
+  yelp.business("id=GCo_yNObZJm1bNuHU3T0IA", function(error, data) {
+    console.log(error);
+    console.log(data);
+    res.render('index', data)
+  });
+  
+
   
   // drive();
   
@@ -41,9 +52,9 @@ app.get("/", function (req, res) {
   //   res.render('index', {storedLocations:storedLocations})
   // })
 
-  db.Location.findOne({ where: {url_yelp: '/biz/ikes-place-san-francisco'} }).then(function(aLocation){
-    res.render('index', { aLocation:aLocation })
-  })
+  // db.Location.findOne({ where: {url_yelp: '/biz/ikes-place-san-francisco'} }).then(function(aLocation){
+  //   res.render('index', { aLocation:aLocation })
+  // })
 
 
   // db.Location.findAll({}).then(function(Locations){

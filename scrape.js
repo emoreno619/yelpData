@@ -218,10 +218,13 @@ var scrape = {
 		if (nextReviewPage){
 
 			request(nextReviewPage, function (error, response, html) {
-
-				$ = cheerio.load(html);
-				console.log("Getting more reviews for loc: " + nextReviewPage)
-				scrape.reviewScrape($, reviews, url_yelp, nextReviewPage, reviewCount, pageCounter)
+				if(error){
+					console.log(error)
+				} else {
+					$ = cheerio.load(html);
+					console.log("Getting more reviews for loc: " + nextReviewPage)
+					scrape.reviewScrape($, reviews, url_yelp, nextReviewPage, reviewCount, pageCounter)
+				}
 			})
 		} else if (!$){
 			//done. go to next location
@@ -266,9 +269,9 @@ var scrape = {
 
 			var a = $(this)
 			if (aReview){
-				if(i%2 == 0)
+				if(i%2 == 0 && Number.isInteger(parseInt(a.html())))
 					aReview.user_friend_count = parseInt(a.html())
-				else
+				else if (Number.isInteger(parseInt(a.html())))
 					aReview.user_review_count = parseInt(a.html())
 			}
 			
@@ -373,6 +376,6 @@ var scrape = {
 
 module.exports = scrape;
 
-scrape.readLocsFromDb();
+// scrape.readLocsFromDb();
 // scrape.getLocInfo()
 // scrape.getLocationUrls()
