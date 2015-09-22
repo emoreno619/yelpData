@@ -1,10 +1,12 @@
-//TODO: migration to include review_sentiment and is_elite
 
 var express = require('express'),
   app = express();
 
 var db = require('./models')
 var request = require('request');
+
+// Scrape stuff
+
 var cheerio = require('cheerio');
 var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
@@ -26,38 +28,27 @@ var locations = []
 
 var scrape = require('./scrape')
 
+
+
+
+
 app.set('view engine', 'ejs');
 
-// a "GET" request to "/" will run the function below
+
 app.get("/", function (req, res) {
-  // send back the response: 'Hello World'
-  
 
-  // scrape.getLocationUrls().done(function(locations){
-  //   console.log('app.js!!!!!!!!!!!!!! ' + locations)
-  // })
+  res.render('index')
 
-  yelp.search({term: "Sushirrito", location:"94108"}, function(error, data) {
-    console.log(error);
+  // yelp.search({term: "Sushirrito", location:"94108"}, function(error, data) {
+  //   console.log(error);
     
-    data.businesses.forEach(function(aBusiness){
-      console.log(aBusiness.id)
-      console.log(aBusiness.location.coordinate)
-    })
+  //   data.businesses.forEach(function(aBusiness){
+  //     console.log(aBusiness.id)
+  //     console.log(aBusiness.location.coordinate)
+  //   })
 
-    // yelp.business("mcdonalds", function(error, data) {
-    //   console.log(error);
-    //   console.log(data);
-    //   res.render('index', {data:data})
-    // });
-
-
-    // console.log(data.businesses.location);
-    res.render('index', {data:data})
-  });
-
-  
-  // drive();
+  //   res.render('index', {data:data})
+  // });
   
   // db.Location.findAll({}).then(function(storedLocations){
   //   console.log(storedLocations)
@@ -81,6 +72,55 @@ app.get("/", function (req, res) {
 
 });
 
+app.post('/yelp', function (req,res){
+
+  var locsNotInDb = []
+  
+
+  yelp.search({term: req.body.term, location: req.body.location}, function(error, data) {
+    console.log(error);
+     
+      console.log(aBusiness.id)
+
+      var url_yelp = aBusiness.url.slice(19, aBusiness.url.length)
+    
+      // create query string
+
+      var y_urls = data.businesses.map(function(aBusiness){
+        return aBusiness.url;
+      });
+
+      var query = { where: { url_yelp: { $in: y_urls} } }
+
+      //query db
+
+      db.Location.findAll(query).then(function(savedLocations){
+        
+        //finds which yelp api urls are not stored in db and stores them in arr to be scraped 
+
+        var my_urls = savedLocations.map(function(aBusiness){
+          return aBusiness.url_yelp
+        })
+
+        y_urls.forEach(function(aY_url){
+          if(my_urls.indexOf(aY_url) == -1)
+            locsNotInDb.push(aY_url)
+        })
+
+        // call to scrape with locsNotInDb
+
+
+        // res with found db
+
+        res.send(savedLocations)
+
+      })
+
+    // res.send(data.businesses)
+  });
+
+})
+
 app.get('/scrape', function (req, res){
   db.Scrapeprogress.create({locId:100}).then(function(aScrape){
     console.log("BOOOOOOOOOOOOOOOOOOOOOOOP" + aScrape)
@@ -92,6 +132,10 @@ app.get('/scrape', function (req, res){
 app.listen(3000, function () {
   console.log("Starting a server on localhost:3000");
 });
+
+
+
+// Scrape functions....I think scape.js is better / more up to date
 
 function drive(){
   var driver = new webdriver.Builder()
@@ -146,21 +190,6 @@ function getLocationUrls(callback){
             aLocation['name'] = a.html()
             locations.push(aLocation)
           })
-          
-          // Saves review count for each location
-
-          // $('span.review-count').each(function(i, element){
-          //   var a = $(this)
-            
-          //   locations[i]['review_count'] = parseInt(a.html())
-            
-          // })
-          
-
-          // If reaches last url on this page, proceeds to next list of
-          // search result urls. Otherwise, calls callback to explore each
-          // saved url's individual location page
-
 
           if (searchResultsCounter < 500){
             searchResultsCounter += 1;
@@ -169,22 +198,6 @@ function getLocationUrls(callback){
           } else {
             writeLocDb();
           }
-
-          // if(searchResultsCounter < 1400){
-          //  searchResultsCounter++;
-          //  // nextSearchUrls = $('span.current').parent().next('li').children('a').attr('href')
-          //  // getLocationUrls()
-          // }else if(searchResultsCounter == 1400){
-          //   searchResultsCounter++;
-          //   getLocationUrls(writeLocDb)
-          // } else {
-          //  // console.log(locations)
-          //  if(callback)
-          //   callback()
-          //  // call(callback, true);
-          // }
-          // call(callback);
-          
 
         } else {
           console.log(error);
