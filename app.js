@@ -37,12 +37,24 @@ app.get("/", function (req, res) {
   //   console.log('app.js!!!!!!!!!!!!!! ' + locations)
   // })
 
-  yelp.business("id=GCo_yNObZJm1bNuHU3T0IA", function(error, data) {
+  yelp.search({term: "Sushirrito", location:"94108"}, function(error, data) {
     console.log(error);
-    console.log(data);
-    res.render('index', data)
+    
+    data.businesses.forEach(function(aBusiness){
+      console.log(aBusiness.id)
+      console.log(aBusiness.location.coordinate)
+    })
+
+    // yelp.business("mcdonalds", function(error, data) {
+    //   console.log(error);
+    //   console.log(data);
+    //   res.render('index', {data:data})
+    // });
+
+
+    // console.log(data.businesses.location);
+    res.render('index', {data:data})
   });
-  
 
   
   // drive();

@@ -55,7 +55,7 @@ var db_interact = {
 		});
 
 		rl.on('close', function(){
-			db_interact.writeDbLoc2()
+			db_interact.writeDbLoc()
 		})
 	},
 
@@ -92,7 +92,7 @@ var db_interact = {
 
 		rl.on('close', function(){
 			console.log('Writing to DB...')
-			db_interact.writeDbLoc()
+			db_interact.writeDbRev()
 		})
 	},
 
