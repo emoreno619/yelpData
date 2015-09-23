@@ -24,7 +24,11 @@ var yelpApi = {
 			    	var y_url = data.businesses[i].url.slice(19, data.businesses[i].url.length)
 					matchingLoc = ''		    	
 
+					console.log(y_url)
+					console.log(my_url)
+
 			    	if (y_url == my_url){
+			    		console.log('made it')
 			    		matchingLoc = data.businesses[i]
 			    		i = data.businesses.length
 			    	}
@@ -47,6 +51,7 @@ var yelpApi = {
 
 	extractLatLong: function(aBusiness, db_obj){
 		if(aBusiness.location && aBusiness.location.coordinate){
+
 			var lat = aBusiness.location.coordinate.latitude
 			var longitude = aBusiness.location.coordinate.longitude
 			db_obj.updateAttributes({lat: lat, long:longitude}).then(function(){ console.log(db_obj.name + " updated!")})
@@ -63,37 +68,37 @@ var yelpApi = {
 
 		  var i = 0;
 
-		  while(i < data.businesses.length){
-		  	
-		  	if(data.businesses[i].location.coordinate.latitude == lat && data.businesses[i].location.coordinate.longitude == long)
-		  	{
-		  		phone = data.businesses[i].phone
-		  		yelp_url = data.businesses[i].url.slice(19, data.businesses[i].url.length)
-		  		i = data.businesses.length
-		  	}
+		  // console.log("lat: " + lat)
+		  // console.log("long: " + long)
+		  // console.log(data.businesses[0].location)
 
-		  	i++
-		  }
+		  if(data.businesses){
 
-		  if(phone || yelp_url)
-		  	db_obj.updateAttributes({phone: phone, url_yelp: yelp_url}).then(function(){ console.log(db_obj.name + " updated!")})
-		  
-		  // data.businesses.forEach(function(aBusiness){
-		    
-		  //   if(aBusiness.location.coordinate.latitude == lat && aBusiness.location.coordinate.longitude == long)
-		  //   {
-		  //   	phone = aBusiness.phone
-		  //   	yelp_url = aBusiness.url.slice(19, data.businesses[i].url.length)
-		  //   }
+			  while(i < data.businesses.length){
+		  		  if(data.businesses[i].location.coordinate){
+			  		  var y_lat = Math.floor(data.businesses[i].location.coordinate.latitude * 1000) / 1000
+			  		  var y_long = Math.floor(data.businesses[i].location.coordinate.longitude * 1000) / 1000
+			  		  lat = Math.floor(lat * 1000) / 1000
+			  		  long = Math.floor(long * 1000) / 1000
+			  	  }  
 
-		  // })
+			  	if(y_lat == lat && y_long == long)
+			  	{
 
-		  // yelp.business("mcdonalds", function(error, data) {
-		  //   console.log(error);
-		  //   console.log(data);
-		  //   res.render('index', {data:data})
-		  // });
+			  		phone = data.businesses[i].phone
+			  		yelp_url = data.businesses[i].url.slice(19, data.businesses[i].url.length)
+			  		i = data.businesses.length
+			  	}
 
+			  	console.log("phone:" + phone)
+			  	console.log("yelp_url:" + yelp_url)
+
+			  	i++
+			  }
+
+			  if(phone || yelp_url)
+			  	db_obj.updateAttributes({phone: phone, url_yelp: yelp_url}).then(function(){ console.log(db_obj.name + " updated!")})
+		 }
 		});
 
 	}
@@ -104,7 +109,7 @@ var db_interact = {
 
 	find_w_url: function(){
 
-		db.Location.findAll({ where: {url_yelp: {ne: null}} }).then(function(storedLocations){
+		db.Location.findAll({ where: {lat: null} }).then(function(storedLocations){
 			
 			console.log(storedLocations.length)
 
@@ -113,15 +118,14 @@ var db_interact = {
 			var interval = setInterval(function(){
 
 				if(storedLocations[i].name && storedLocations[i].address && storedLocations[i])
-
-					yelpApi.ySearch(storedLocations[i].name, storedLocations[i].address.slice(-5,storedLocations[i].address.length), storedLocations[i].lat, storedLocations[i].long, storedLocations[i])
+					yelpApi.ySearch(storedLocations[i].name, storedLocations[i].address.slice(-5,storedLocations[i].address.length), storedLocations[i].url_yelp, storedLocations[i])
 
 				i++
 
 				if(i >= storedLocations.length)
 					clearInterval(interval)
 
-			}, 1000)
+			}, 2000)
 
 			// storedLocations.forEach(function(aLocation){
 				
@@ -140,6 +144,7 @@ var db_interact = {
 	find_wout_url: function(){
 		db.Location.findAll({ where: {url_yelp: null} }).then(function(storedLocations){
 			console.log(storedLocations.length)
+			// console.log(storedLocations[0].name)
 
 			var i = 0;
 
@@ -147,16 +152,24 @@ var db_interact = {
 
 				if(storedLocations[i] && storedLocations[i].name && storedLocations[i].address)
 
+					console.log(storedLocations[i].name)
 					var name = storedLocations[i].name
 
+
 					while(name.indexOf('&') != -1){
-						var substring = name.substring(name.indexOf('&'), name.indexOf(';') +1)
+						if(name.indexOf(';') != -1)
+							var substring = name.substring(name.indexOf('&'), name.indexOf(';') +1)
+						else
+							var substring = name.substring(name.indexOf('&'), name.indexOf('&') +1)	
 						name = name.replace(substring,'')
 					}
 
-					name = name.replace([ ]/g, '+')
 
-					yelpApi.ySearch_phone_url(name, storedLocations[i].address.slice(-5,storedLocations[i].address.length), storedLocations[i].url_yelp, storedLocations[i])
+					name = name.replace(/[']/g, '')
+					name = name.replace(/[ ]/g, '+')
+
+					if(storedLocations[i].address)
+						yelpApi.ySearch_phone_url(name, storedLocations[i].address.slice(-5,storedLocations[i].address.length), storedLocations[i].lat, storedLocations[i].long, storedLocations[i])
 
 				i++
 
@@ -170,7 +183,7 @@ var db_interact = {
 
 }
 
-db_interact.find_w_url();
+db_interact.find_wout_url();
 
 
 

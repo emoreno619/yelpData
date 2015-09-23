@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('playdb', 'eduardo', '', {
+var sequelize = new Sequelize('true_backup_allreviews', 'eduardo', '', {
   host: 'localhost',
   dialect: 'postgres',
 

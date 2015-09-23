@@ -26,7 +26,9 @@ var db_interact = {
 					categories = categories + loc_obj.categories[i]
 			}
 
-			var address = loc_obj.full_address.replace('\n','')
+			var address = loc_obj.full_address.replace('\n',' ')
+
+			console.log(address)
 
 
 			var aLoc = {}
@@ -41,7 +43,7 @@ var db_interact = {
 				aLoc.price = String(loc_obj.attributes['Price Range'])
 			if (loc_obj.categories)
 				aLoc.category = categories
-			if (loc_obj.address)
+			if (loc_obj.full_address)
 				aLoc.address = address
 			if (loc_obj.latitude)
 				aLoc.lat = loc_obj.latitude
@@ -50,7 +52,7 @@ var db_interact = {
 
 			arrOfObj.push(aLoc)
 
-			console.log(loc_obj)
+			console.log(aLoc)
 	
 		});
 
@@ -111,3 +113,4 @@ var db_interact = {
 }
 
 // db_interact.ReviewReader()
+db_interact.LocReader();

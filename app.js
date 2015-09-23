@@ -1,6 +1,7 @@
 
 var express = require('express'),
-  app = express();
+  app = express(),
+  bodyParser = require("body-parser");
 
 var db = require('./models')
 var request = require('request');
@@ -31,7 +32,8 @@ var scrape = require('./scrape')
 
 
 
-
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
 
 
@@ -72,22 +74,30 @@ app.get("/", function (req, res) {
 
 });
 
+app.get('/locations/:id', function (req,res){
+  db.Location.findOne({where: {id: req.params.id}}).then(function(location){
+    db.Review.findAll({where: { locationId: req.params.id}}).then(function(reviews){
+      console.log(reviews)
+      res.render('show', {location:location , reviews:reviews})
+    })
+  })
+})
+
 app.post('/yelp', function (req,res){
 
   var locsNotInDb = []
   
 
   yelp.search({term: req.body.term, location: req.body.location}, function(error, data) {
-    console.log(error);
-     
-      console.log(aBusiness.id)
-
-      var url_yelp = aBusiness.url.slice(19, aBusiness.url.length)
-    
+      console.log(error);
+      console.log("Yelp! returned " + data.businesses.length + " results for that query")
       // create query string
 
       var y_urls = data.businesses.map(function(aBusiness){
-        return aBusiness.url;
+        
+        var url = aBusiness.url.slice(19, aBusiness.url.length)
+
+        return url;
       });
 
       var query = { where: { url_yelp: { $in: y_urls} } }

@@ -1,0 +1,33 @@
+	<a href="/">Home</a>
+
+	<h1><%= location.name %></h1>
+	<h2>Topics discussed in reviews</h2>
+	<!-- TOPICS GO HERE -->
+
+	<h2>Location Info:</h2>
+	<p>
+		<%= location.address %>
+	</p>
+	<p>
+		<%= location.phone %>
+	</p>
+	<p>
+		Rating: <%= location.rating %>
+		(<%= location.review_count %> reviews)
+	</p>
+	<p>
+		<%= location.price %>
+	</p>
+	<p>
+		<%= location.category %>
+	</p>
+
+
+	<h2>Reviews</h2>
+	<% reviews.forEach(function(aReview){ %>
+		<div>
+			<p>
+				<%= aReview.review %>
+			</p>
+		</div>
+	<% }) %>
