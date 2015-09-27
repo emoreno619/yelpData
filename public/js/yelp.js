@@ -24,8 +24,12 @@ $(function(){
 
 				$('body').append(
 					'<div id=yRating>' + 
-						'<a target="_blank" href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
-						'<div>'  + aLoc.rating + ' (' + aLoc.review_count + ' reviews)'+ '</div>' +
+						'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
+						'<div>'  + 
+								aLoc.rating + 
+								' (' + aLoc.review_count + ' reviews)'+
+								'Lat:' + aLoc.lat + ' Long:' + aLoc.long +
+						 '</div>' +
 					'</div>'
 					)
 

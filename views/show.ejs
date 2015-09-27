@@ -3,6 +3,12 @@
 	<h1><%= location.name %></h1>
 	<h2>Topics discussed in reviews</h2>
 	<!-- TOPICS GO HERE -->
+	<p>
+		<!--	<%= Object.keys(topics) %> -->
+		<% topics.forEach(function(aTopic){ %>
+			<%= aTopic[0] %>
+		<% }) %>
+	</p>
 
 	<h2>Location Info:</h2>
 	<p>
@@ -25,7 +31,11 @@
 
 	<h2>Reviews</h2>
 	<% reviews.forEach(function(aReview){ %>
-		<div>
+		<div class="aReview">
+			<p class="aReviewHead">
+				Rating: <%= aReview.rating %> &nbsp
+				Date: <%= aReview.date %>
+			</p>
 			<p>
 				<%= aReview.review %>
 			</p>

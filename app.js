@@ -77,8 +77,71 @@ app.get("/", function (req, res) {
 app.get('/locations/:id', function (req,res){
   db.Location.findOne({where: {id: req.params.id}}).then(function(location){
     db.Review.findAll({where: { locationId: req.params.id}}).then(function(reviews){
-      console.log(reviews)
-      res.render('show', {location:location , reviews:reviews})
+
+      // console.log(reviews)
+      var review_text_single = reviews.map(function(aReviewObj){
+        return aReviewObj.review
+      })
+
+      var review_text_whole = [review_text_single.join(' ')]
+
+      // console.log(review_text_whole)
+
+      // console.log(review_text_single)
+
+      // '["IM SOME DATA", "shit dawg"]'
+
+      request.post('http://127.0.0.1:5000/new', {form: {data: JSON.stringify(review_text_whole)}}, function(error, response, body){
+        if (!error && response.statusCode == 200) {
+          
+          console.log('IN THE POST REQUEST')  
+          console.log(body)
+          body = JSON.parse(body)
+
+          var arr = []
+
+          var highObj = {key : "", score : 0};
+          var secObj = {key : "", score : 0};
+          var thirdObj = {key : "", score : 0};
+
+
+          for (var key in body){
+            arr.push([key, body[key]])
+
+            // if(body[key] > highObj.score){          
+            //   highObj.key = key
+            //   highObj.score = body[key]
+            // } else if(body[key] > secObj.score){
+            //   secObj.key = key
+            //   secObj.score = body[key]
+            // } else if(body[key] > thirdObj.score){
+            //   thirdObj.key = key
+            //   thirdObj.score = body[key]
+            // }
+          }
+
+          arr = arr.sort(function(a,b){ return b[1] - a[1] })
+
+          console.log(arr)
+
+          res.render('show', {location:location , reviews:reviews, topics:arr})
+
+        } else
+          console.log(error)
+      })
+
+      // request.post('http://127.0.0.1:5000/new', {form: {data: JSON.stringify(review_text_single)}}, function(error, response, body){
+      //   if (!error && response.statusCode == 200) {
+          
+      //     console.log('IN THE POST REQUEST')  
+      //     console.log(body)
+
+      //     res.render('show', {location:location , reviews:reviews})
+
+      //   } else
+      //     console.log(error)
+      // })
+
     })
   })
 })
