@@ -3,22 +3,41 @@
 <html>
   <head>
 	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/lumen/bootstrap.min.css">
+
 	<link rel="stylesheet" href="/css/style.css">
 
   	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
   	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
 
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
   	<script type="text/javascript" src="/js/yelp.js"></script>
 
   </head>
   <body>
-  
-	  <div id="map-canvas">
+		<h1>YOPICS!</h1>
+	
+	  <div id="resDiv" class="dropdown">
+		<form id='searchPlaceForm' action="">
+			<input class="formName controls" type="text" placeholder="Search Term">
+  	    	<input id="pac-input" class="formLoc controls" type="text" placeholder="Location, Address, City">
+    		<input type="submit" value="Go!">
+  	    </form>
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+      		Nearby locations <span class="caret"></span>
+    	</a>
+    	<ul class="dropdown-menu" style="margin-left: 11px;">
+	    </ul>	
 	  </div>
 
-	  <form id='searchPlaceForm' action="/places" method="POST">
+	  <div id="map">
+	  </div>
+
+	  <!-- <form id='searchPlaceForm' action="/places" method="POST">
 	  	<div id='formStyle'>
 	  		<div>
 	  			<label for="name">Name:</label>
@@ -32,13 +51,11 @@
 	  			<input type="submit" value="Search!">
 	  		</div>
 	  	</div>
-	  </form>
+	  </form> -->
 
 	  <div id="resultsContainer">
 	  	
 	  </div>
-
-
 
   </body>
 </html>

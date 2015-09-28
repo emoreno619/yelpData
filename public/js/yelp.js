@@ -2,9 +2,12 @@
 
 $(function(){
 
-	var map = new google.maps.Map(document.getElementById('map-canvas'), {
-	    center: new google.maps.LatLng(37.7833,-122.4167),
-	    zoom: 15
+	var pos = new google.maps.LatLng(37.7833,-122.4167);
+
+	var map = new google.maps.Map(document.getElementById('map'), {
+	    center: pos,
+	    zoom: 15,
+	    scaleControl: true
 	  });
 
 	var formData = {};
@@ -13,8 +16,24 @@ $(function(){
 	var markers = []
 
 
+
 	function initialize(){
+		mapStyle()
 		checkMapPos(yelpCall)
+	}
+
+	function mapStyle(){
+		var centerControlDiv = document.createElement('div');
+	  	var centerControl = new CenterControl(centerControlDiv, map);
+
+		centerControlDiv.index = 1;
+		map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerControlDiv);
+
+		var resDiv = document.getElementById('resDiv');
+		var input = document.getElementById('pac-input');
+		var searchBox = new google.maps.places.SearchBox(input);
+   	    map.controls[google.maps.ControlPosition.TOP_LEFT].push(resDiv);
+
 	}
 
 	function checkMapPos(yelp_callback){
@@ -45,7 +64,7 @@ $(function(){
 		    
 		    navigator.geolocation.getCurrentPosition(function(position) {
 		      
-			      var pos = new google.maps.LatLng(position.coords.latitude,
+			      pos = new google.maps.LatLng(position.coords.latitude,
 			                                       position.coords.longitude);
 
 			      map.setCenter(pos);
@@ -67,6 +86,7 @@ $(function(){
 			      yelp_callback()
 		    });
 		} else {
+
 			prepare_toSend();
 
 			yelp_callback()
@@ -133,7 +153,7 @@ $(function(){
 
 		markers.push(marker)
 
-		google.maps.event.addListener(marker, 'click', function() {
+		google.maps.event.addListener(marker, 'mouseover', function() {
 
 		  if(marker.flag){
 		  	marker.infowindow = new google.maps.InfoWindow(options);
@@ -160,14 +180,14 @@ $(function(){
 
 				dropPin(aLoc, true)
 
-				$('#resultsContainer').append(
-					'<div id=yRating>' + 
+				$('.dropdown-menu').append(
+					'<li id="yRating">' + 
 						'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
-						'<div>'  + 
+						'<div style="padding-left: 15px">'  + 
 								aLoc.rating + 
 								' (' + aLoc.review_count + ' reviews)'+
 						 '</div>' +
-					'</div>'
+					'</li><li class="divider"></li>'
 					)
 			})
 		} else {
@@ -177,14 +197,14 @@ $(function(){
 
 				dropPin(aLoc, false)
 
-				$('#resultsContainer').append(
-					'<div id=yRating>' + 
+				$('.dropdown-menu').append(
+					'<li id="yRating">' + 
 						'<a href='+ aLoc.url +'>' + aLoc.name + '</a> ' + 
-						'<div>'  + 
+						'<div style="padding-left: 15px">'  + 
 								aLoc.rating + 
 								' (' + aLoc.review_count + ' reviews)'+
 						 '</div>' +
-					'</div>'
+					'</li><li class="divider"></li>'
 					)
 			})
 
@@ -200,20 +220,56 @@ $(function(){
 	    icon: image,
 	    animation: google.maps.Animation.DROP
 	  });
+
+	  markers.push(marker)
 	}
 
 	$('#searchPlaceForm').submit(function(e){
 		e.preventDefault();
-		formData.term = $('#name').val();
-		formData.location = $('#city').val();
-		$('#name').val("");
-		$('#city').val("");
+		formData.term = $('.formName').val();
+		formData.location = $('.formLoc').val();
+		$('.formName').val("");
+		$('.formLocation').val("");
 
-		$('#resultsContainer').children().remove();
+		$('.dropdown-menu').children().remove();
 		clearPins();
 
 		checkMapPos(yelpCall)
 	})
+
+	function CenterControl(controlDiv, map) {
+
+	  // Set CSS for the control border.
+	  var controlUI = document.createElement('div');
+	  controlUI.style.backgroundColor = '#fff';
+	  controlUI.style.border = '2px solid #fff';
+	  controlUI.style.borderRadius = '3px';
+	  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+	  controlUI.style.cursor = 'pointer';
+	  controlUI.style.marginBottom = '22px';
+	  controlUI.style.marginRight = '22px';
+	  controlUI.style.marginTop = '22px';
+	  controlUI.style.textAlign = 'center';
+	  controlUI.title = 'Click to recenter the map';
+	  controlDiv.appendChild(controlUI);
+
+	  // Set CSS for the control interior.
+	  var controlText = document.createElement('div');
+	  controlText.style.color = 'rgb(25,25,25)';
+	  controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	  controlText.style.fontSize = '16px';
+	  controlText.style.lineHeight = '38px';
+	  controlText.style.paddingLeft = '5px';
+	  controlText.style.paddingRight = '5px';
+	  controlText.innerHTML = 'Show me!';
+	  controlUI.appendChild(controlText);
+
+	  // Setup the click event listeners: simply set the map to Chicago.
+	  controlUI.addEventListener('click', function() {
+	    map.setCenter(pos);
+	  });
+
+	}
 
 	initialize();
 
