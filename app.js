@@ -134,7 +134,7 @@ app.post('/yelp', function (req,res){
   var locsNotInDb = []
   
 
-  yelp.search({term: req.body.term, location: req.body.location}, function(error, data) {
+  yelp.search({term: req.body.term, ll: req.body.ll}, function(error, data) {
       console.log(error);
       console.log("Yelp! returned " + data.businesses.length + " results for that query")
       // create query string
