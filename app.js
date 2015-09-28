@@ -159,16 +159,24 @@ app.post('/yelp', function (req,res){
         })
 
         y_urls.forEach(function(aY_url){
-          if(my_urls.indexOf(aY_url) == -1)
-            locsNotInDb.push(aY_url)
+          if(my_urls.indexOf(aY_url) == -1){
+            data.businesses.forEach(function(aLoc){
+              if(aLoc.url.slice(19, aLoc.url.length) == aY_url)
+                locsNotInDb.push(aLoc)
+            })
+          }   
         })
+
+        var afterApi = {}
+        afterApi.myLocs = savedLocations
+        afterApi.locsNotInDb = locsNotInDb
 
         // call to scrape with locsNotInDb
 
 
         // res with found db
 
-        res.send(savedLocations)
+        res.send(afterApi)
 
       })
 

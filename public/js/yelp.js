@@ -96,18 +96,28 @@ $(function(){
 
 			console.log(data)
 
-			buildDomResults(data);
+			buildDomResults(data.myLocs, true);
+			buildDomResults(data.locsNotInDb, false);
 
 		})
 	}
 
-	function dropPin(aLoc){
+	function dropPin(aLoc, mine){
 		// var placeLoc = place.geometry.location;
-		var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> '
+		
+		if(mine){
+			var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> '
+			var lat = parseFloat(aLoc.lat)
+			var long = parseFloat(aLoc.long)
+		} else {
+			var showRoute = '<a href='+ aLoc.url +'>' + aLoc.name + '</a> '
+			var lat = parseFloat(aLoc.location.coordinate.latitude)
+			var long = parseFloat(aLoc.location.coordinate.longitude)
+		}
 
 		var options = {
 			map: map,
-			position: {lat: parseFloat(aLoc.lat), lng: parseFloat(aLoc.long)},
+			position: {lat: lat, lng: long},
 			content: showRoute
 		}
 
@@ -115,7 +125,7 @@ $(function(){
 
 		var marker = new google.maps.Marker({
 		  map: map,
-		  position: {lat: parseFloat(aLoc.lat), lng: parseFloat(aLoc.long)},
+		  position: {lat: lat, lng: long},
 		  flag: true
 		});
 
@@ -134,22 +144,43 @@ $(function(){
 		});
 	}
 
-	function buildDomResults(data){
-		data.forEach(function(aLoc){
+	function buildDomResults(locArr, mine){
+		
+		if(mine){
+			locArr.forEach(function(aLoc){
 
-			dropPin(aLoc)
+				dropPin(aLoc, true)
 
-			$('body').append(
-				'<div id=yRating>' + 
-					'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
-					'<div>'  + 
-							aLoc.rating + 
-							' (' + aLoc.review_count + ' reviews)'+
-							'Lat:' + aLoc.lat + ' Long:' + aLoc.long +
-					 '</div>' +
-				'</div>'
-				)
-		})
+				$('body').append(
+					'<div id=yRating>' + 
+						'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
+						'<div>'  + 
+								aLoc.rating + 
+								' (' + aLoc.review_count + ' reviews)'+
+						 '</div>' +
+					'</div>'
+					)
+			})
+		} else {
+			console.log(locArr)
+
+			locArr.forEach(function(aLoc){
+
+				dropPin(aLoc, false)
+
+				$('body').append(
+					'<div id=yRating>' + 
+						'<a href='+ aLoc.url +'>' + aLoc.name + '</a> ' + 
+						'<div>'  + 
+								aLoc.rating + 
+								' (' + aLoc.review_count + ' reviews)'+
+						 '</div>' +
+					'</div>'
+					)
+
+			})
+
+		}
 	}
 
 	initialize();
