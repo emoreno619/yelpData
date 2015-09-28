@@ -54,11 +54,13 @@ $(function(){
 
 			      location = position
 
-			      var infowindow = new google.maps.InfoWindow({
-			        map: map,
-			        position: pos,
-			        content: 'Your location.'
-			      });
+			      addMarkerUserLoc(pos);
+
+			      // var infowindow = new google.maps.InfoWindow({
+			      //   map: map,
+			      //   position: pos,
+			      //   content: 'Your location.'
+			      // });
 
 			      prepare_toSend();
 
@@ -187,6 +189,17 @@ $(function(){
 			})
 
 		}
+	}
+
+	function addMarkerUserLoc(location) {
+	  var image = "images/marker-youAreHere.png"
+
+	  var marker = new google.maps.Marker({
+	    position: location,
+	    map: map,
+	    icon: image,
+	    animation: google.maps.Animation.DROP
+	  });
 	}
 
 	$('#searchPlaceForm').submit(function(e){
