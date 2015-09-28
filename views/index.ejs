@@ -14,9 +14,31 @@
 
   </head>
   <body>
-  <div id="map-canvas"></div>
+  
+	  <div id="map-canvas">
+	  </div>
 
-    Hello!
+	  <form id='searchPlaceForm' action="/places" method="POST">
+	  	<div id='formStyle'>
+	  		<div>
+	  			<label for="name">Name:</label>
+	  			<input type="text" name="name" id="name" autofocus>
+	  		</div>
+	  		<div>
+	  			<label for="city">Address, city or location:</label>
+	  			<input type="text" name="city" id="city">
+	  		</div>
+	  		<div id='submitButton'>
+	  			<input type="submit" value="Search!">
+	  		</div>
+	  	</div>
+	  </form>
+
+	  <div id="resultsContainer">
+	  	
+	  </div>
+
+
 
   </body>
 </html>

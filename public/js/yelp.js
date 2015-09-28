@@ -22,7 +22,7 @@ $(function(){
 		
 		if(formData.location){
 
-	      	var address = formData.city
+	      	var address = formData.location
 	      	var geocoder = new google.maps.Geocoder();
 	      	geocoder.geocode( { 'address': address}, function(results, status) {
 	      	      
@@ -65,6 +65,10 @@ $(function(){
 
 			      yelp_callback()
 		    });
+		} else {
+			prepare_toSend();
+
+			yelp_callback()
 		} 
 	}
 
@@ -75,7 +79,7 @@ $(function(){
 			toSend.term = "food"
 
 		if (formData.location)
-			toSend.location = formData.location
+			toSend.ll = String(Math.floor(location.H * 100000)/100000 ) + "," + String(Math.floor(location.L * 100000)/100000)
 		else if (location){
 			toSend.ll = String(Math.floor(location.coords.latitude * 100000)/100000 ) + "," + String(Math.floor(location.coords.longitude * 100000)/100000)
 			console.log(toSend.ll)
@@ -106,11 +110,11 @@ $(function(){
 		// var placeLoc = place.geometry.location;
 		
 		if(mine){
-			var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> '
+			var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> <br>' + aLoc.rating + ' (' + aLoc.review_count + ' reviews)'
 			var lat = parseFloat(aLoc.lat)
 			var long = parseFloat(aLoc.long)
 		} else {
-			var showRoute = '<a href='+ aLoc.url +'>' + aLoc.name + '</a> '
+			var showRoute = '<a href='+ aLoc.url +'>' + aLoc.name + '</a> <br>' + aLoc.rating + ' (' + aLoc.review_count + ' reviews)'
 			var lat = parseFloat(aLoc.location.coordinate.latitude)
 			var long = parseFloat(aLoc.location.coordinate.longitude)
 		}
@@ -151,7 +155,7 @@ $(function(){
 
 				dropPin(aLoc, true)
 
-				$('body').append(
+				$('#resultsContainer').append(
 					'<div id=yRating>' + 
 						'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
 						'<div>'  + 
@@ -168,7 +172,7 @@ $(function(){
 
 				dropPin(aLoc, false)
 
-				$('body').append(
+				$('#resultsContainer').append(
 					'<div id=yRating>' + 
 						'<a href='+ aLoc.url +'>' + aLoc.name + '</a> ' + 
 						'<div>'  + 
@@ -182,6 +186,17 @@ $(function(){
 
 		}
 	}
+
+	$('#searchPlaceForm').submit(function(e){
+		e.preventDefault();
+		formData.term = $('#name').val();
+		formData.location = $('#city').val();
+
+
+		$('#resultsContainer').children().remove();
+
+		checkMapPos(yelpCall)
+	})
 
 	initialize();
 
