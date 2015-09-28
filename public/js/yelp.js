@@ -85,8 +85,6 @@ $(function(){
 
 
 	function yelpCall(){
-		
-		console.log("HELLLLLLLLLO")
 
 		$.ajax({
 				  type: 'POST',
@@ -98,24 +96,60 @@ $(function(){
 
 			console.log(data)
 
-			data.forEach(function(aLoc){
-
-				$('body').append(
-					'<div id=yRating>' + 
-						'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
-						'<div>'  + 
-								aLoc.rating + 
-								' (' + aLoc.review_count + ' reviews)'+
-								'Lat:' + aLoc.lat + ' Long:' + aLoc.long +
-						 '</div>' +
-					'</div>'
-					)
-
-			})
+			buildDomResults(data);
 
 		})
+	}
 
+	function dropPin(aLoc){
+		// var placeLoc = place.geometry.location;
+		var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> '
 
+		var options = {
+			map: map,
+			position: {lat: parseFloat(aLoc.lat), lng: parseFloat(aLoc.long)},
+			content: showRoute
+		}
+
+		// var infowindow = new google.maps.InfoWindow(options);
+
+		var marker = new google.maps.Marker({
+		  map: map,
+		  position: {lat: parseFloat(aLoc.lat), lng: parseFloat(aLoc.long)},
+		  flag: true
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+
+		  // infowindow.setContent(place.name);
+		  if(marker.flag){
+		  	marker.infowindow = new google.maps.InfoWindow(options);
+		  	marker.infowindow.open(map, this);
+		  	marker.flag = !marker.flag
+		  } else {
+		  	marker.infowindow.close();
+		  	marker.flag = !marker.flag
+		  }
+	
+		});
+	}
+
+	function buildDomResults(data){
+		data.forEach(function(aLoc){
+
+			dropPin(aLoc)
+
+			$('body').append(
+				'<div id=yRating>' + 
+					'<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> ' + 
+					'<div>'  + 
+							aLoc.rating + 
+							' (' + aLoc.review_count + ' reviews)'+
+							'Lat:' + aLoc.lat + ' Long:' + aLoc.long +
+					 '</div>' +
+				'</div>'
+				)
+		})
 	}
 
 	initialize();
