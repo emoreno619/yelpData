@@ -1,3 +1,5 @@
+// TODO: NULLS SHOW PAGES BREAK~~~~~~~~~~
+
 $(function(){
 
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -8,14 +10,11 @@ $(function(){
 	var formData = {};
 	var toSend = {}
 	var location;
+	var markers = []
 
 
 	function initialize(){
-
-		// yelpCall(toSend)
-
 		checkMapPos(yelpCall)
-
 	}
 
 	function checkMapPos(yelp_callback){
@@ -107,7 +106,6 @@ $(function(){
 	}
 
 	function dropPin(aLoc, mine){
-		// var placeLoc = place.geometry.location;
 		
 		if(mine){
 			var showRoute = '<a href=/locations/'+ aLoc.id +'>' + aLoc.name + '</a> <br>' + aLoc.rating + ' (' + aLoc.review_count + ' reviews)'
@@ -125,17 +123,16 @@ $(function(){
 			content: showRoute
 		}
 
-		// var infowindow = new google.maps.InfoWindow(options);
-
 		var marker = new google.maps.Marker({
 		  map: map,
 		  position: {lat: lat, lng: long},
 		  flag: true
 		});
 
+		markers.push(marker)
+
 		google.maps.event.addListener(marker, 'click', function() {
 
-		  // infowindow.setContent(place.name);
 		  if(marker.flag){
 		  	marker.infowindow = new google.maps.InfoWindow(options);
 		  	marker.infowindow.open(map, this);
@@ -146,6 +143,12 @@ $(function(){
 		  }
 	
 		});
+	}
+
+	function clearPins(){
+		markers.forEach(function(aMarker){
+			aMarker.setMap(null)
+		})
 	}
 
 	function buildDomResults(locArr, mine){
@@ -181,7 +184,6 @@ $(function(){
 						 '</div>' +
 					'</div>'
 					)
-
 			})
 
 		}
@@ -191,9 +193,11 @@ $(function(){
 		e.preventDefault();
 		formData.term = $('#name').val();
 		formData.location = $('#city').val();
-
+		$('#name').val("");
+		$('#city').val("");
 
 		$('#resultsContainer').children().remove();
+		clearPins();
 
 		checkMapPos(yelpCall)
 	})
