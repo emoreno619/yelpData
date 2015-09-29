@@ -7,7 +7,8 @@ $(function(){
 	var map = new google.maps.Map(document.getElementById('map'), {
 	    center: pos,
 	    zoom: 15,
-	    scaleControl: true
+	    scaleControl: true,
+	    mapTypeControl: false
 	  });
 
 	var formData = {};
@@ -25,6 +26,7 @@ $(function(){
 	function mapStyle(){
 		var centerControlDiv = document.createElement('div');
 	  	var centerControl = new CenterControl(centerControlDiv, map);
+
 
 		centerControlDiv.index = 1;
 		map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerControlDiv);
@@ -229,7 +231,7 @@ $(function(){
 		formData.term = $('.formName').val();
 		formData.location = $('.formLoc').val();
 		$('.formName').val("");
-		$('.formLocation').val("");
+		$('.formLoc').val("");
 
 		$('.dropdown-menu').children().remove();
 		clearPins();

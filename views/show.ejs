@@ -1,4 +1,123 @@
-	<a href="/">Home</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>yopics - <%= location.name %> </title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/lumen/bootstrap.min.css">
+
+	<link rel="stylesheet" href="/css/style.css">
+
+  	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+  	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+	
+</body>
+</html>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">yopics</a>
+      <ul class="nav navbar-nav navbar-right">
+      	<li><a href="#">about</a></li>
+  	  </ul>
+    </div>  
+  </div>
+</nav>
+
+
+	<div class="panel panel-info">
+	  <div class="panel-heading">
+	    <h3 class="panel-title"><%= location.name %></h3>
+	  </div>
+	  <div class="panel-body">
+
+		<div class="panel panel-success">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Location Info:</h3>
+		  </div>
+		  <div class="panel-body">
+		    	    <p>
+		    	    	<%= location.address %>
+		    	    </p>
+		    	    <p>
+		    	    	<%= location.phone %>
+		    	    </p>
+		    	    <p>
+		    	    	Rating: <%= location.rating %>
+		    	    	(<%= location.review_count %> reviews)
+		    	    </p>
+		    	    <p>
+		    	    	<%= location.price %>
+		    	    </p>
+		    	    <p>
+		    	    	<%= location.category %>
+		    	    </p>
+		  </div>
+		</div>
+
+		<div class="panel panel-default">
+		  <div class="panel-body">
+		    <h2>Topics discussed in reviews</h2>
+		    	    <!-- TOPICS GO HERE -->
+		    	    <p>
+		    	    	<!--	<%= Object.keys(topics) %> -->
+		    	    	<h3>
+		    	    		<% topics.forEach(function(aTopic){ %>
+		    	    		<%= aTopic[0] %>
+		    	    		<% }) %>
+		    	    	</h3>
+		    	    </p>
+		  </div>
+		</div>
+
+
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h2>Reviews</h2></div>
+		  <div class="panel-body">
+		    <% reviews.forEach(function(aReview){ %>
+		    	    	<div class="aReview">
+		    	    		<h3>Review Details:</h3>
+		    	    		<p class="aReviewHead">
+		    	    			<p>
+		    	    				<h4>Topics:</h4>
+		    	    				<% aReview.topics.forEach(function(aTopic){ %>
+		    	    					<%= aTopic[0] %>
+		    	    				<% }) %>
+		    	    			</p>
+		    	    			Rating: <%= aReview.rating %> &nbsp
+		    	    			Date: <%= aReview.date %>
+		    	    		</p>
+		    	    		<p>
+		    	    			<h4>Review Text:</h4>
+		    	    			<%= aReview.review %>
+		    	    		</p>
+		    	    	</div>
+		    	    	<br><br><br>
+		    	    <% }) %>
+		  </div>
+		</div>
+	    
+
+	    <!-- end of BS panel -->
+	  </div>
+	</div>
+
+
+
 
 	<h1><%= location.name %></h1>
 	<h2>Topics discussed in reviews</h2>
