@@ -88,39 +88,58 @@ app.get('/locations/:id', function (req,res){
 
       // '["IM SOME DATA", "shit dawg"]'
 
-      request.post('http://127.0.0.1:5000/location', {form: {data: JSON.stringify(review_text_whole)}}, function(error, response, body){
+      request.post('http://54.148.31.81/location', {form: {data: JSON.stringify(review_text_whole)}}, function(error, response, body){
         if (!error && response.statusCode == 200) {
           
           console.log('IN THE POST REQUEST')  
           console.log(body)
           body = JSON.parse(body)
 
+
           var arr = []
 
-          for (var key in body){
-            arr.push([key, body[key]])
+
+          body['topics'].forEach(function(topicGroup){
+            arr.push(topicGroup)
+          })
+
+
+          // for (var key in body['topics']){
+          //   // arr.push([key, body[key]])
+          //   for(var top in key)
+          //     arr.push(key)
+          // }
+
+          // arr = arr.sort(function(a,b){ return b[1] - a[1] })
+
+          console.log(body['topics'])
+
+          reviewsToSend = []
+
+          for (var i = 0; i < 20; i++){
+            reviewsToSend.push(reviews[i])
           }
 
-          arr = arr.sort(function(a,b){ return b[1] - a[1] })
+          res.render('show', {location:location , reviews:reviewsToSend, topics:body['topics']})
 
-          console.log(arr)
+          // http://127.0.0.1:5000/location
 
-          request.post('http://127.0.0.1:5000/reviews', {form: {data: JSON.stringify(review_text_single)}}, function(error, response, body){
-            if (!error && response.statusCode == 200) {
+          // request.post('http://127.0.0.1:5000/reviews', {form: {data: JSON.stringify(review_text_single)}}, function(error, response, body){
+          //   if (!error && response.statusCode == 200) {
 
-              body = JSON.parse(body)
+          //     body = JSON.parse(body)
 
-              for(var i = 0; i < body.reviewTopics.length; i++){
-                reviews[i].topics = body.reviewTopics[i]
-              }
+          //     for(var i = 0; i < body.reviewTopics.length; i++){
+          //       reviews[i].topics = body.reviewTopics[i]
+          //     }
 
-              console.log(reviews[0])
+          //     console.log(reviews[0])
 
-              res.render('show', {location:location , reviews:reviews, topics:arr})
-            } else
-              console.log(error)
+          //     res.render('show', {location:location , reviews:reviews, topics:arr})
+          //   } else
+          //     console.log(error)
           
-          })
+          // })
 
         } else
           console.log(error)
