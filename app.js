@@ -88,7 +88,7 @@ app.get('/locations/:id', function (req,res){
 
       // '["IM SOME DATA", "shit dawg"]'
 
-      request.post('http://54.148.31.81/location', {form: {data: JSON.stringify(review_text_whole)}}, function(error, response, body){
+      request.post('http://52.89.62.23/location', {form: {data: JSON.stringify(review_text_whole)}}, function(error, response, body){
         if (!error && response.statusCode == 200) {
           
           console.log('IN THE POST REQUEST')  
@@ -123,6 +123,8 @@ app.get('/locations/:id', function (req,res){
           res.render('show', {location:location , reviews:reviewsToSend, topics:body['topics']})
 
           // http://127.0.0.1:5000/location
+          // http://54.148.31.81/location small model
+          // http://52.89.62.23/location
 
           // request.post('http://127.0.0.1:5000/reviews', {form: {data: JSON.stringify(review_text_single)}}, function(error, response, body){
           //   if (!error && response.statusCode == 200) {
