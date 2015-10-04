@@ -1,6 +1,5 @@
 var Sequelize = require('sequelize');
 
-
 var sequelize = new Sequelize('d686gjh2jaiin7', 'efrqcltfuclfxm', 'JXwjoHXC6LajcTOq2eXUxW4RAc', {
   host: 'ec2-54-83-51-38.compute-1.amazonaws.com',
   dialect: 'postgres',

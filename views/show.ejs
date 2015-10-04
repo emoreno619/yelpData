@@ -10,13 +10,73 @@
 
 	<link rel="stylesheet" href="/css/style.css">
 
-  	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+	<script type="text/javascript" src="/js/wordcloud2.js"></script>
 
   	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="/js/graph.js"></script>
 </head>
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: orange;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+</style>
 <body>
+	
 	<nav class="navbar navbar-inverse">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
@@ -34,77 +94,98 @@
 	  </div>
 	</nav>
 
+		<div class=".container">
 
-		<div class="panel panel-info">
-		  <div class="panel-heading">
-		    <h3 class="panel-title"><%= location.name %></h3>
-		  </div>
-		  <div class="panel-body">
+			
 
-			<div class="panel panel-success">
-			  <div class="panel-heading">
-			    <h3 class="panel-title">Location Info:</h3>
-			  </div>
-			  <div class="panel-body">
-			    	    <p>
-			    	    	<%= location.address %>
-			    	    </p>
-			    	    <p>
-			    	    	<%= location.phone %>
-			    	    </p>
-			    	    <p>
-			    	    	Rating: <%= location.rating %>
-			    	    	(<%= location.review_count %> reviews)
-			    	    </p>
-			    	    <p>
-			    	    	<%= location.price %>
-			    	    </p>
-			    	    <p>
-			    	    	<%= location.category %>
-			    	    </p>
-			  </div>
+			<div id="largestWrapper" class="row"  style="max-height: 100%;" class="panel panel-info">
+			
+			<div id="wrapper" class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-2">
+				  <div class="panel-heading">
+				    <h3 class="panel-title"><%= location.name %></h3>
+				  </div>
+				  <div class="panel-body">
+						<div id="locInfo" class="panel panel-success">
+						  <div class="panel-heading">
+						    <h3 class="panel-title">Location Info:</h3>
+						  </div>
+						  <div class="panel-body">
+						    	    <p id="address">
+						    	    	<%= location.address %>
+						    	    </p>
+						    	    <p>
+						    	    	<%= location.phone %>
+						    	    </p>
+						    	    <p>
+						    	    	Rating: <%= location.rating %>
+						    	    	(<%= location.review_count %> reviews)
+						    	    </p>
+						    	    <p>
+						    	    	<%= location.price %>
+						    	    </p>
+						    	    <p>
+						    	    	<%= location.category %>
+						    	    </p>
+						  </div>
+						</div>
+					
+				  </div>
+				</div>
+				<div class="col-md-6">
+					<div id="showMap" class="panel panel-default" style="margin-top: 20px">
+					  <div class="panel-body" style="height: 250px;">
+					    <div id="map"></div>
+					  </div>
+					</div>
+				</div>
+				
 			</div>
 
-			<div class="panel panel-default">
-			  <div class="panel-body">
-			    <h2>Topics discussed in reviews</h2>
-			    	    <!-- TOPICS GO HERE -->
-			    	    <p>
-			    	    	<!--	<%= Object.keys(topics) %> -->
-			    	    	<h3>
-			    	    		<% topics.forEach(function(aTopic){ %>
-			    	    		[ <%= aTopic %> ]
-			    	    		<% }) %>
-			    	    	</h3>
-			    	    </p>
+				<div class="row">
+					<div class="col-md-2"></div>
+					<div id="topicsDiv" class="col-md-5">
+					  <div class="panel-body">
+					    <h2>Topics discussed in reviews</h2>
+					    	   <canvas id="my_canvas" 	width="100" height="100"></canvas>
+					    	    <!-- TOPICS GO HERE -->
+					    	    <p>
+					    	    	<!--	<%= Object.keys(topics) %> -->
+					    	    	<h3>
+					    	    		<!-- <% topics.forEach(function(aTopic){ %> -->
+					    	    		<!-- [ <%= aTopic %> ] -->
+					    	    		<!-- <% }) %> -->
+					    	    	</h3>
+					    	    </p>
+					    	    <div id="someId" data-config='<%= JSON.stringify(topics) %>'></div>
+					  </div>
+					</div>
+
+				<div class="col-md-3 panel panel-default" style="margin-top: 5%; height: 400px; overflow-y: scroll; overflow-x: none; border: none;">
+				  <div class="panel-heading"><h2>Reviews</h2></div>
+				  <div class="panel-body">
+				    <% reviews.forEach(function(aReview){ %>
+				    	    	<div class="aReview">
+				    	    		<h3>Review Details:</h3>
+				    	    		<p class="aReviewHead">
+				    	    			
+				    	    			Rating: <%= aReview.rating %> &nbsp
+				    	    			Date: <%= aReview.date %>
+				    	    		</p>
+				    	    		<p>
+				    	    			<h4>Review Text:</h4>
+				    	    			<%= aReview.review %>
+				    	    		</p>
+				    	    	</div>
+				    	    	<br><br><br>
+				    	    <% }) %>
+				  </div>
+				</div>
+			    </div>
+	
+			    <!-- end of BS panel -->
 			  </div>
-			</div>
-
-
-			<div class="panel panel-default">
-			  <div class="panel-heading"><h2>Reviews</h2></div>
-			  <div class="panel-body">
-			    <% reviews.forEach(function(aReview){ %>
-			    	    	<div class="aReview">
-			    	    		<h3>Review Details:</h3>
-			    	    		<p class="aReviewHead">
-			    	    			
-			    	    			Rating: <%= aReview.rating %> &nbsp
-			    	    			Date: <%= aReview.date %>
-			    	    		</p>
-			    	    		<p>
-			    	    			<h4>Review Text:</h4>
-			    	    			<%= aReview.review %>
-			    	    		</p>
-			    	    	</div>
-			    	    	<br><br><br>
-			    	    <% }) %>
-			  </div>
-			</div>
-		    
-
-		    <!-- end of BS panel -->
-		  </div>
 		</div>
 
 </body>

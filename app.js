@@ -124,7 +124,7 @@ app.get('/locations/:id', function (req,res){
 
           // http://127.0.0.1:5000/location
           // http://54.148.31.81/location small model
-          // http://52.89.62.23/location
+          // http://52.89.62.23/location  big model
 
           // request.post('http://127.0.0.1:5000/reviews', {form: {data: JSON.stringify(review_text_single)}}, function(error, response, body){
           //   if (!error && response.statusCode == 200) {
