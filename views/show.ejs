@@ -103,30 +103,30 @@ body {
 			<div id="wrapper" class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-2">
-				  <div class="panel-heading">
-				    <h3 class="panel-title"><%= location.name %></h3>
-				  </div>
+				  <!-- <div class="panel-heading"> -->
+				    <h1><%= location.name %></h1>
+				  <!-- </div> -->
 				  <div class="panel-body">
 						<div id="locInfo" class="panel panel-success">
 						  <div class="panel-heading">
 						    <h3 class="panel-title">Location Info:</h3>
 						  </div>
 						  <div class="panel-body">
-						    	    <p id="address">
-						    	    	<%= location.address %>
+						    	    <p>
+						    	    	<h3 id="address"><%= location.address %></h3>
 						    	    </p>
 						    	    <p>
-						    	    	<%= location.phone %>
+						    	    	<h3><%= location.phone %></h3>
 						    	    </p>
 						    	    <p>
-						    	    	Rating: <%= location.rating %>
-						    	    	(<%= location.review_count %> reviews)
+						    	    	<h3>Rating: <%= location.rating %>
+						    	    	(<%= location.review_count %> reviews)</h3>
 						    	    </p>
 						    	    <p>
-						    	    	<%= location.price %>
+						    	    	<h3><%= location.price %></h3>
 						    	    </p>
 						    	    <p>
-						    	    	<%= location.category %>
+						    	    	<h3><%= location.category %></h3>
 						    	    </p>
 						  </div>
 						</div>
@@ -135,10 +135,11 @@ body {
 				</div>
 				<div class="col-md-6">
 					<div id="showMap" class="panel panel-default" style="margin-top: 20px">
-					  <div class="panel-body" style="height: 250px;">
+					  <div class="panel-body" style="height: 580px;">
 					    <div id="map"></div>
 					  </div>
 					</div>
+					<!--  <h1><%= location.name %></h1> -->
 				</div>
 				
 			</div>
@@ -162,20 +163,22 @@ body {
 					  </div>
 					</div>
 
-				<div class="col-md-3 panel panel-default" style="margin-top: 5%; height: 400px; overflow-y: scroll; overflow-x: none; border: none;">
+				<div class="col-md-3 panel panel-default" style="margin-top: 5%; height: 400px; overflow-y: scroll; overflow-x: hidden; border: none;">
 				  <div class="panel-heading"><h2>Reviews</h2></div>
 				  <div class="panel-body">
 				    <% reviews.forEach(function(aReview){ %>
 				    	    	<div class="aReview">
-				    	    		<h3>Review Details:</h3>
+				    	    		<h3>
 				    	    		<p class="aReviewHead">
 				    	    			
 				    	    			Rating: <%= aReview.rating %> &nbsp
 				    	    			Date: <%= aReview.date %>
 				    	    		</p>
+				    	    		</h3>
 				    	    		<p>
-				    	    			<h4>Review Text:</h4>
+				    	    			<h4>
 				    	    			<%= aReview.review %>
+				    	    			</h4>
 				    	    		</p>
 				    	    	</div>
 				    	    	<br><br><br>

@@ -2,9 +2,17 @@ $(function(){
 
 	var list = [['foo', 12], ['bar', 6], ['five', 20], ['different', 10], ['words', 22]]
 
+	var map
+
+	var address = $('#address').html()
+
+	console.log(address)
+
+	makeMap(address)
+
 	var topics = document.getElementById('someId').dataset.config;
 	// topics =  [[0.1358955554797558,["chicken",0.004099022819727766],["sweet",0.0035599800847392203],["dish",0.0031888566710227026],["pork",0.00317311423465345],["sauce",0.0030819166722384694]],[0.07142784050209776,["&#xa0;i",0.003987006751789378],["&#xa0;the",0.0036324702745263145],["&#xa0;",0.0026057274981626678],["it&apos;s",0.0025412429649793134],["ordered",0.0024100901594410573]],[0.060751441143363914,["&#xa0;the",0.013202513347261503],["&#xa0;i",0.012010269128152659],["chicken",0.006318292217731867],["tea",0.005422818745803797],["great.",0.005354862545724721]],[0.0503820309035713,["burger",0.029422300580124384],["fries",0.014577619011715014],["burgers",0.01148663562710977],["burger.",0.008928662770770646],["onion",0.008236425796420548]],
-	console.log("Topics " + topics)
+	// console.log("Topics " + topics)
 
 	topics = JSON.parse(topics)
 
@@ -23,14 +31,14 @@ $(function(){
 
 		arrTopics.push(anObj)
 	})
-	console.log(arrTopics)
+	// console.log(arrTopics)
 
 	var scores = [ {word:'foo', score:12},{word:'bar', score:6},{word:'five', score:20},{word:'different', score:10},{word:'words', score:20}]
 
 	// WordCloud(document.getElementById('my_canvas'), { list: list } );
 
 	function cloudMaker(topics){
-		console.log(topics)
+		// console.log(topics)
 		// topics = list
 
 		newArr = []
@@ -44,11 +52,11 @@ $(function(){
 		topics.forEach(function(aTopic,i){
 			anArr = []
 			anArr.push(htmlDecode(aTopic[0]))
-			anArr.push(aTopic[1] * 20 / max)
+			anArr.push(aTopic[1] * 40 / max)
 			newArr.push(anArr)
 		})
 
-		console.log(newArr)
+		// console.log(newArr)
 
 		WordCloud(document.getElementById('my_canvas'), { list: newArr } );		
 	}
@@ -84,7 +92,7 @@ $(function(){
 	  .html(function(d) {
 	  	// return "<strong>Score:</strong> <span style='color:red'>" + d.topics + "</span>"
 	
-	    return '<canvas id="my_canvas" width="100" height="100"></canvas>';
+	    return '<canvas id="my_canvas" width="300" height="300"></canvas>';
 	  })
 
 	var svg = d3.select("#topicsDiv").append("svg")
@@ -140,11 +148,55 @@ $(function(){
 	  return d;
 	}
 
-	var map;
+	// var map;
 
-	var address = $('#address').html()
+	function addMarkerUserLoc(location) {
+	  var image = "images/marker-youAreHere.png"
 
-	console.log(address)
+	  var marker = new google.maps.Marker({
+	    position: location,
+	    map: map,
+	    icon: image,
+	    animation: google.maps.Animation.DROP
+	  });
+	}
+
+	function makeMap2(address){
+
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode( { 'address': address}, function(results, status) {
+		      
+		      if (status == google.maps.GeocoderStatus.OK) {
+		        
+		        
+		        console.log(results)
+
+		        map.setCenter(results[0].geometry.location)
+
+		        var marker = new google.maps.Marker({
+		          map: map,
+		          position: results[0].geometry.location,
+		          flag: true
+		        });
+
+		      } else {
+		        alert("Geocode was not successful for the following reason: " + status);
+		      }
+		    });		
+	};
+
+	function makeMap(position){
+
+		map = new google.maps.Map(document.getElementById('map'), {
+			    // center: position,
+			    zoom: 15,
+			    scaleControl: true,
+			    mapTypeControl: false
+			  });
+
+		makeMap2(position)
+
+	}
 
 	// var geocoder = new google.maps.Geocoder();
 	// geocoder.geocode( { 'address': address}, function(results, status) {
