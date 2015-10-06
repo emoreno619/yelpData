@@ -1,5 +1,14 @@
 <img src="./public/images/yopics.png" alt="">
 
+*Yopics - Yelp Review Topic Modeling
+
+This Node.js, Flask and PostgreSQL app models topics in Yelp reviews in order to succinctly display prominent topics for all reviews of a location. Users then better understand which features scores reflect. Scraped 1.1mil re- views in one day + 1.6mil from Yelp academic dataset. Data sci + machine learning + web application + D3 data viz. 
+
+<a href="http://prezi.com/1yy4lqqxevdb/?utm_campaign=share&utm_medium=copy">Brief overview of app</a>
+
+Flask Repo: https://github.com/emoreno619/yelpData
+App in Action: https://yopics.herokuapp.com/
+
 This program scraped about 800,000 unique reviews from yelp (scraped 1.1 million in one day, some were redundant). It is an expansion of another project, [sentimentAnalysis](https://github.com/emoreno619/sentimentAnalysis) For further explanation, see my blog https://medium.com/@emoreno619
 
 Documentation of procedure that produced data set:
