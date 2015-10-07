@@ -2,6 +2,8 @@
 
 $(function(){
 
+	$('[data-toggle="tooltip"]').tooltip()
+
 	var pos = new google.maps.LatLng(37.7833,-122.4167);
 
 	var map = new google.maps.Map(document.getElementById('map'), {
@@ -273,8 +275,6 @@ $(function(){
 	  });
 
 	}
-
-	$('[data-toggle="popover"]').popover()
 
 	initialize();
 
