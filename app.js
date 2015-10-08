@@ -17,8 +17,8 @@ var webdriver = require('selenium-webdriver'),
 var yelp = require("yelp").createClient({
             consumer_key: 'KEFLEf4cm0Xw7vzreOAPLw', 
             consumer_secret: '-KgYfp8CXRq0tSEd7_XCqYmRQr8',
-            token: 'F0VfgC9G0VPeXYF8Q4aX8lbOgVKvkfVC',
-            token_secret: 'cZe1601_aBo0HYzYzb0hqmEfKBc'
+            token: 'CYyW8UnYLVVJtsdZP3NTfax9QRyPgQOY',
+            token_secret: '9RFKTaDm4FdYY9Dzd2C-P3AH2hA'
           });
 
 var flag = true;
