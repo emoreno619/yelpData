@@ -104,7 +104,7 @@ $(function(){
 			toSend.term = "food"
 
 		if (formData.location)
-			toSend.ll = String(Math.floor(location.H * 100000)/100000 ) + "," + String(Math.floor(location.L * 100000)/100000)
+			toSend.ll = String(Math.floor(location.J * 100000)/100000 ) + "," + String(Math.floor(location.M * 100000)/100000)
 		else if (location){
 			toSend.ll = String(Math.floor(location.coords.latitude * 100000)/100000 ) + "," + String(Math.floor(location.coords.longitude * 100000)/100000)
 			console.log(toSend.ll)
