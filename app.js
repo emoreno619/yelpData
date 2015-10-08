@@ -157,7 +157,11 @@ app.post('/yelp', function (req,res){
   
 
   yelp.search({term: req.body.term, ll: req.body.ll}, function(error, data) {
-      console.log(error);
+      if(error){
+        console.log(error);
+      } else {
+      
+
       console.log("Yelp! returned " + data.businesses.length + " results for that query")
       // create query string
 
@@ -201,10 +205,10 @@ app.post('/yelp', function (req,res){
         res.send(afterApi)
 
       })
-
+    }
     // res.send(data.businesses)
   });
-
+  
 })
 
 app.get('/scrape', function (req, res){
