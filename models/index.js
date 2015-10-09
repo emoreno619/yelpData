@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var dotenv = require('dotenv').load(),
+var dotenv = require('dotenv').load();
 
 var sequelize = new Sequelize(process.env.DB_NAME || 'true_backup_allreviews', process.env.DB_USER || 'eduardo', process.env.DB_PASS || '', {
   host: process.env.DB_HOST || 'localhost',
