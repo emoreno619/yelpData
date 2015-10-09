@@ -1,7 +1,7 @@
 
 var express = require('express'),
   app = express(),
-  bodyParser = require("body-parser");
+  bodyParser = require("body-parser"),
   dotenv = require('dotenv').load();
 
 var db = require('./models')
@@ -15,10 +15,10 @@ var webdriver = require('selenium-webdriver'),
     until = require('selenium-webdriver').until;
 
 var yelp = require("yelp").createClient({
-            consumer_key: 'KEFLEf4cm0Xw7vzreOAPLw', 
-            consumer_secret: '-KgYfp8CXRq0tSEd7_XCqYmRQr8',
-            token: 'CYyW8UnYLVVJtsdZP3NTfax9QRyPgQOY',
-            token_secret: '9RFKTaDm4FdYY9Dzd2C-P3AH2hA'
+            consumer_key: process.env.YELP_KEY, 
+            consumer_secret: process.env.YELP_SECRET,
+            token: process.env.YELP_TOKEN,
+            token_secret: process.env.YELP_TSECRET
           });
 
 var flag = true;
