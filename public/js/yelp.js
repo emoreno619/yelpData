@@ -51,7 +51,7 @@ $(function(){
 	      	      if (status == google.maps.GeocoderStatus.OK) {
 	      	        
 	      	        location = results[0].geometry.location
-	      	        console.log(location)
+	      	        console.log(results[0].geometry.location)
 	      	        
 	      	        map.setCenter(results[0].geometry.location);
 
@@ -104,7 +104,7 @@ $(function(){
 			toSend.term = "food"
 
 		if (formData.location)
-			toSend.ll = String(Math.floor(location.J * 100000)/100000 ) + "," + String(Math.floor(location.M * 100000)/100000)
+			toSend.ll = String(Math.floor(location.G * 100000)/100000 ) + "," + String(Math.floor(location.K * 100000)/100000)
 		else if (location){
 			toSend.ll = String(Math.floor(location.coords.latitude * 100000)/100000 ) + "," + String(Math.floor(location.coords.longitude * 100000)/100000)
 			console.log(toSend.ll)

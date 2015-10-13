@@ -13,18 +13,6 @@ var sequelize = new Sequelize(process.env.DB_NAME || 'true_backup_allreviews', p
   
 });
 
-// var sequelize = new Sequelize('d686gjh2jaiin7', 'efrqcltfuclfxm', 'JXwjoHXC6LajcTOq2eXUxW4RAc', {
-//   host: 'ec2-54-83-51-38.compute-1.amazonaws.com',
-//   dialect: 'postgres',
-
-//   pool: {
-//     max: 5,
-//     min: 0,
-//     idle: 10000
-//   },
-  
-// });
-
 // var sequelize = new Sequelize('true_backup_allreviews', 'eduardo', '', {
 //   host: 'localhost',
 //   dialect: 'postgres',
