@@ -2,6 +2,7 @@
 
 $(function(){
 
+	$('#myModal').modal('show') 
 	$('[data-toggle="popover"]').popover()
 
 	var pos = new google.maps.LatLng(37.7833,-122.4167);
