@@ -4,7 +4,7 @@
 
 This Node.js, Flask and PostgreSQL app models topics in Yelp reviews in order to succinctly display prominent topics for all reviews of a location. Users then better understand which features scores reflect. Scraped 1.1mil reviews in one day + 1.6mil from Yelp academic dataset. Data sci + machine learning + web application + D3 data viz. 
 
-<a href="http://prezi.com/1yy4lqqxevdb/?utm_campaign=share&utm_medium=copy">Brief overview of app</a>
+<a href="http://prezi.com/1yy4lqqxevdb/?utm_campaign=share&utm_medium=copy" target="_blank">Brief overview of app</a>
 
 Flask Repo: https://github.com/emoreno619/yelpData
 
