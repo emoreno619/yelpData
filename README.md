@@ -6,7 +6,7 @@ This Node.js, Flask and PostgreSQL app models topics in Yelp reviews in order to
 
 <a href="http://prezi.com/1yy4lqqxevdb/?utm_campaign=share&utm_medium=copy" target="_blank">Brief overview of app</a>
 
-Flask Repo: https://github.com/emoreno619/yelpData
+Flask Repo: https://github.com/emoreno619/topic_model_flask
 
 App in Action: https://yopics.herokuapp.com/
 
